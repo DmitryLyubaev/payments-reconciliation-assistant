@@ -20,6 +20,8 @@ export type HttpDeps = {
   fixtures: DemoFixture[];
   port?: number;
   assetDir?: string;
+  runtimeMode?: 'fake/scripted' | 'anthropic';
+  modelVersion?: string;
 };
 export type RunningServer = { origin: string; close(): Promise<void> };
 function json(res: ServerResponse, status: number, data: unknown) {
@@ -87,7 +89,12 @@ export async function createServer(deps: HttpDeps): Promise<RunningServer> {
           throw new Error('FORBIDDEN');
       }
       if (req.method === 'GET' && path === '/api/session')
-        return json(res, 200, { token, mode: 'fake/scripted', reviewer: 'demo-reviewer' });
+        return json(res, 200, {
+          token,
+          mode: deps.runtimeMode ?? 'fake/scripted',
+          modelVersion: deps.modelVersion ?? 'fake-scripted-v1',
+          reviewer: 'demo-reviewer',
+        });
       if (req.method === 'GET' && path === '/api/fixtures')
         return json(
           res,

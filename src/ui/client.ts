@@ -10,6 +10,7 @@ let token = '',
   busy = false,
   reviewRequest = 0,
   evidenceRequest = 0;
+let runtimeLabel = 'Fake/scripted';
 function clearEvidence() {
   evidenceRequest++;
   el('evidence-record').hidden = true;
@@ -107,7 +108,8 @@ async function render(view: ReviewView) {
         : 'Gathering evidence and checking calculation profiles.');
   el('next-step').textContent = view.proposal?.nextStep ?? '';
   el('references').textContent = view.proposal
-    ? 'Evidence: ' + view.proposal.evidenceRefs.map((r) => `${r.id} v${r.version}`).join(', ')
+    ? `Proposal model: ${view.proposal.modelVersion}. Evidence: ` +
+      view.proposal.evidenceRefs.map((r) => `${r.id} v${r.version}`).join(', ')
     : '';
   for (const action of ['accept', 'reject', 'acknowledge'] as const) {
     const button = el<HTMLButtonElement>(action);
@@ -220,7 +222,7 @@ async function loadExample() {
     el('receipt-picker').hidden = receipts.length < 2;
     if (!receipts.length) throw new Error('NO_RECEIPTS');
     await chooseReceipt(receipts[0].batchId, receipts[0].receiptId, true);
-    message('Fake/scripted investigation. Review the evidence before deciding.');
+    message(`${runtimeLabel} investigation. Review the evidence before deciding.`);
   } catch (error) {
     showError(error);
   } finally {
@@ -261,7 +263,11 @@ el('receipt').addEventListener('change', () => {
 for (const action of ['accept', 'reject', 'acknowledge'] as const)
   el(action).addEventListener('click', () => void decide(action));
 async function init() {
-  token = (await api('/api/session')).token;
+  const session = await api('/api/session');
+  token = session.token;
+  runtimeLabel =
+    session.mode === 'anthropic' ? `Claude (${session.modelVersion})` : 'Fake/scripted';
+  el('model-mode').textContent = `Local demo / ${runtimeLabel}`;
   demos = await api('/api/fixtures');
   const picker = el<HTMLSelectElement>('fixture');
   for (const demo of demos) {

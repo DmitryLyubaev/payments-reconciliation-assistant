@@ -1,5 +1,22 @@
 import { test, expect } from '@playwright/test';
 
+test('mode banner uses runtime metadata and the proposal identifies its own model', async ({
+  page,
+}) => {
+  await page.route('**/api/session', async (route) => {
+    const response = await route.fetch();
+    await route.fulfill({
+      response,
+      json: { ...(await response.json()), mode: 'anthropic', modelVersion: 'claude-sonnet-5-5' },
+    });
+  });
+  await page.goto('/');
+  await expect(page.locator('#model-mode')).toContainText('claude-sonnet-5-5');
+  await page.getByLabel('Demo case').selectOption('dev-rounding');
+  await page.getByRole('button', { name: 'Load example' }).click();
+  await expect(page.locator('#references')).toContainText('Proposal model: fake-scripted-v1');
+});
+
 test('a delayed evidence response cannot overwrite the newly selected receipt', async ({
   page,
 }) => {

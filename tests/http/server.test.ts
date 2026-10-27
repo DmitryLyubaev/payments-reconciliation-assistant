@@ -7,7 +7,7 @@ import { startRunner } from '../../src/workflow/runner.js';
 import { applyIntent } from '../../src/workflow/decisions.js';
 import { tempStore } from '../support/temp-store.js';
 import { roundingFixture, roundingScript } from '../support/fixtures.js';
-async function setup() {
+async function setup(runtimeMode: 'fake/scripted' | 'anthropic' = 'fake/scripted') {
   const t = tempStore();
   const workflow = createWorkflow({
     store: t.store,
@@ -21,6 +21,8 @@ async function setup() {
     runner,
     fixtures: [{ id: f.id, label: 'GST rounding', data: f, script: roundingScript(f) }],
     port: 0,
+    runtimeMode,
+    modelVersion: runtimeMode === 'anthropic' ? 'claude-sonnet-5-5' : 'fake-scripted-v1',
   });
   const token = (await (await fetch(server.origin + '/api/session')).json()).token;
   const post = (path: string, body: unknown, extra: Record<string, string> = {}) =>
@@ -45,6 +47,18 @@ async function setup() {
     },
   };
 }
+
+test('session publishes the configured runtime model without provider credentials', async () => {
+  const t = await setup('anthropic');
+  try {
+    const session = await (await fetch(t.server.origin + '/api/session')).json();
+    assert.equal(session.mode, 'anthropic');
+    assert.equal(session.modelVersion, 'claude-sonnet-5-5');
+    assert.deepEqual(Object.keys(session).sort(), ['mode', 'modelVersion', 'reviewer', 'token']);
+  } finally {
+    await t.finish();
+  }
+});
 test('session, origin and host checks protect mutations', async () => {
   const t = await setup();
   try {

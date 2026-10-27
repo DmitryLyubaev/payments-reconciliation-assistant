@@ -29,6 +29,11 @@ export class Store {
     this.db.pragma('busy_timeout = 5000');
     this.db.pragma('foreign_keys = ON');
     this.db.exec(readFileSync(new URL('./schema.sql', import.meta.url), 'utf8'));
+    const columns = this.db.prepare('PRAGMA table_info(investigations)').all() as {
+      name: string;
+    }[];
+    if (!columns.some((column) => column.name === 'model_json'))
+      this.db.exec('ALTER TABLE investigations ADD COLUMN model_json TEXT');
   }
   transaction<T>(fn: () => T): T {
     return this.db.transaction(fn)();

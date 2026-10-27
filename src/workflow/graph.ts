@@ -9,7 +9,8 @@ import type { Snapshot } from '../domain/contracts.js';
 import { initialInvestigationState, stepInvestigation } from '../investigation/loop.js';
 import { createTools } from '../investigation/tools.js';
 import { createFakeModel } from '../investigation/fake-model.js';
-import type { FakeScript, InvestigationState } from '../investigation/contracts.js';
+import type { FakeScript, InvestigationState, ModelAdapter } from '../investigation/contracts.js';
+import { FAKE_IDENTITY, type ModelIdentity } from '../investigation/live-config.js';
 export type AppliedIntent = {
   state: 'applied' | 'invalidated';
   outcome: 'reviewed_explained' | 'open_unresolved';
@@ -28,6 +29,7 @@ export type WorkflowDeps = {
     expectedProposalId: string,
   ) => AppliedIntent | Promise<AppliedIntent>;
   scriptResolver?: (id: string) => FakeScript;
+  live?: { identity: ModelIdentity; adapter: ModelAdapter };
 };
 export interface Workflow {
   start(snapshot: Snapshot, script: FakeScript): Promise<WorkflowView>;
@@ -43,9 +45,13 @@ type InvestigationRow = {
   state_json: string;
   status: WorkflowView['status'];
   proposal_id: string | null;
+  model_json: string | null;
 };
 export function createWorkflow(deps: WorkflowDeps): Workflow {
   const { store } = deps;
+  const identity = deps.live?.identity ?? FAKE_IDENTITY;
+  const matchesIdentity = (row: { model_json: string | null }) =>
+    digestOf(row.model_json ? JSON.parse(row.model_json) : FAKE_IDENTITY) === digestOf(identity);
   const db = new Database(join(store.dataDir, 'checkpoints.sqlite'));
   db.pragma('busy_timeout = 5000');
   const saver = new SqliteSaver(db);
@@ -80,6 +86,7 @@ export function createWorkflow(deps: WorkflowDeps): Workflow {
     })
     .addNode('investigate', async (s) => {
       const row = read(s.flow.threadId);
+      if (!matchesIdentity(row)) throw new Error('MODEL_CONFIG_MISMATCH');
       const snapshot = JSON.parse(row.snapshot_json) as Snapshot;
       const script = JSON.parse(row.script_json) as FakeScript;
       let flow: InvestigationState;
@@ -92,7 +99,9 @@ export function createWorkflow(deps: WorkflowDeps): Workflow {
             snapshot,
             analysis: analyse(snapshot),
             tools: createTools(store, snapshot),
-            model: createFakeModel(script),
+            model: deps.live?.adapter ?? createFakeModel(script),
+            modelVersion: identity.modelVersion,
+            promptVersion: identity.promptVersion,
           },
           s.flow,
         );
@@ -186,18 +195,20 @@ export function createWorkflow(deps: WorkflowDeps): Workflow {
   };
   return {
     async start(snapshot, script) {
+      if (deps.live) script = { id: 'live-model', version: identity.modelVersion, steps: [] };
       const scriptDigest = digestOf(script);
-      const existing = store.db
+      const candidates = store.db
         .prepare(
-          "SELECT id FROM investigations WHERE snapshot_digest=? AND script_digest=? AND status<>'failed' ORDER BY seq DESC LIMIT 1",
+          "SELECT id,model_json FROM investigations WHERE snapshot_digest=? AND script_digest=? AND status<>'failed' ORDER BY seq DESC",
         )
-        .get(snapshot.digest, scriptDigest) as { id: string } | undefined;
+        .all(snapshot.digest, scriptDigest) as { id: string; model_json: string | null }[];
+      const existing = candidates.find(matchesIdentity);
       if (existing) return serial(existing.id, async () => view(existing.id));
       const id = randomUUID();
-      const flow = initialInvestigationState(id, snapshot);
+      const flow = initialInvestigationState(id, snapshot, Date.now(), identity.systemPrompt);
       store.db
         .prepare(
-          "INSERT INTO investigations(id,batch_id,receipt_id,snapshot_digest,snapshot_json,state_json,script_json,script_digest,status) VALUES(?,?,?,?,?,?,?,?,'investigating')",
+          "INSERT INTO investigations(id,batch_id,receipt_id,snapshot_digest,snapshot_json,state_json,script_json,script_digest,status,model_json) VALUES(?,?,?,?,?,?,?,?,'investigating',?)",
         )
         .run(
           id,
@@ -208,6 +219,7 @@ export function createWorkflow(deps: WorkflowDeps): Workflow {
           JSON.stringify(flow),
           JSON.stringify(script),
           scriptDigest,
+          JSON.stringify(identity),
         );
       return serial(id, () => execute(id, { flow }));
     },
@@ -225,6 +237,9 @@ export function createWorkflow(deps: WorkflowDeps): Workflow {
     },
     recover(id) {
       return serial(id, async () => {
+        const existingRow = read(id);
+        if (existingRow.status === 'investigating' && !matchesIdentity(existingRow))
+          throw new Error('MODEL_CONFIG_MISMATCH');
         const checkpoint = await graph.getState(config(id));
         if (checkpoint.tasks.some((t) => t.interrupts?.length)) return view(id);
         if (checkpoint.next.length) return execute(id, null);

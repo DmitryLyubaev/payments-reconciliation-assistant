@@ -3,6 +3,7 @@ node_modules/
 .superpowers/
 dist/
 .env*
+!.env.example
 /data/
 /results/
 test-results/
