@@ -42,6 +42,9 @@ export type ObservedCase = {
   elapsedMs: number;
   baselineElapsedMs?: number;
   errorCode?: string;
+  modelCategory?: string;
+  modelDifferenceMinor?: string | null;
+  explanation?: string;
 };
 export type CaseScore = { passed: boolean; checks: Record<string, boolean> };
 export function scoreCase(observed: ObservedCase, expected: ExpectedCase): CaseScore {

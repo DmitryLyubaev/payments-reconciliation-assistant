@@ -11,7 +11,7 @@ import { requireOfflineMode } from '../investigation/fake-model.js';
 import type { Proposal, DecisionRequest } from '../investigation/contracts.js';
 import { openStore } from '../storage/store.js';
 import { importFixture, loadSnapshot } from '../storage/imports.js';
-import { createWorkflow } from '../workflow/graph.js';
+import { createWorkflow, type WorkflowDeps } from '../workflow/graph.js';
 import { recordDecision, applyIntent } from '../workflow/decisions.js';
 import { recoverPending } from '../workflow/runner.js';
 import { loadEvaluationCatalog, type EvaluationCase } from './catalog.js';
@@ -34,13 +34,17 @@ export type EvaluationReport = {
   cases: (ObservedCase & { score: CaseScore })[];
   processCrashRecovery: { runByEvaluator: false; command: string };
 };
-async function observe(c: EvaluationCase): Promise<ObservedCase> {
+export async function observe(
+  c: EvaluationCase,
+  live?: WorkflowDeps['live'],
+): Promise<ObservedCase> {
   const start = performance.now();
   const prefix = join(tmpdir(), 'payment-eval-'),
     dir = mkdtempSync(prefix),
     store = openStore(dir);
   const workflow = createWorkflow({
     store,
+    live,
     applyIntent: (id, expected) => applyIntent(store, id, undefined, expected),
   });
   const result: ObservedCase = {
@@ -79,7 +83,30 @@ async function observe(c: EvaluationCase): Promise<ObservedCase> {
     result.differenceMinor = analysis.differenceMinor;
     if (c.scenario === 'duplicate_import')
       result.duplicateReplayed = importFixture(store, c.data).status === 'replayed';
-    const view = await workflow.start(snapshot, c.script);
+    const view = await workflow.start(
+      snapshot,
+      live ? { id: 'live-model', version: '1', steps: [] } : c.script,
+    );
+    const state = store.db
+      .prepare('SELECT state_json FROM investigations WHERE id=?')
+      .get(view.threadId) as { state_json: string };
+    const failure = JSON.parse(state.state_json).result;
+    if (failure?.status === 'failed') result.errorCode = failure.code;
+    const replies = store.db
+      .prepare(
+        "SELECT payload FROM model_attempts WHERE thread_id=? AND status='completed' ORDER BY turn DESC",
+      )
+      .all(view.threadId) as { payload: string }[];
+    const candidate = replies
+      .map((row) => JSON.parse(row.payload))
+      .find((reply) => reply.type === 'proposal')?.proposal;
+    if (candidate) {
+      if (typeof candidate.category === 'string') result.modelCategory = candidate.category;
+      if (typeof candidate.differenceMinor === 'string' || candidate.differenceMinor === null)
+        result.modelDifferenceMinor = candidate.differenceMinor;
+      if (typeof candidate.explanation === 'string')
+        result.explanation = candidate.explanation.slice(0, 4000);
+    }
     result.category = view.status === 'matched' ? 'matched' : 'failed';
     if (view.status === 'matched') {
       result.outcome = 'matched';
@@ -156,7 +183,7 @@ async function observe(c: EvaluationCase): Promise<ObservedCase> {
   }
   return result;
 }
-function codeIdentity(root: string) {
+export function codeIdentity(root: string) {
   let codeVersion = 'unversioned-source',
     workingTreeDirty = true;
   try {

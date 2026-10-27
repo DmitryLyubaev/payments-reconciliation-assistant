@@ -14,6 +14,7 @@
     "check": "npm run typecheck && npm run build && npm test && npm run test:ui",
     "start": "node scripts/start.mjs",
     "evaluate:offline": "node --import tsx scripts/evaluate.ts --mode fake",
+    "evaluate:live": "node --import tsx scripts/evaluate-live.ts",
     "format:check": "prettier --check \"src/**/*.{ts,css,html}\" \"tests/**/*.ts\" \"scripts/*.{ts,mjs}\" \"*.json\" \"docs/*.md\" README.md .github/workflows/ci.yml"
   },
   "dependencies": {
