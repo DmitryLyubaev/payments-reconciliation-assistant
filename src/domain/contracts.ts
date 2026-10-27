@@ -27,7 +27,7 @@ export type Fixture = z.infer<typeof fixtureSchema>;
 export type Category = 'matched'|'explained_rounding'|'insufficient_evidence'|'contradictory_evidence'|'unexplained_mismatch';
 export type Snapshot = {batchId:string;receiptId:string;digest:string;sources:Source[];policies:Policy[]};
 export type Calculation = {id:string;sourceRef:Ref;rounding:Policy['rounding'];subtotalMinor:Minor;taxMinor:Minor;grossMinor:Minor};
-export type Analysis = {category:Category;differenceMinor:string;eligible:boolean;requiredRefs:Ref[];missing:string[];calculations:Calculation[]};
+export type Analysis = {category:Category;differenceMinor:string|null;eligible:boolean;requiredRefs:Ref[];missing:string[];calculations:Calculation[]};
 export function parseFixture(raw:unknown):Fixture { return fixtureSchema.parse(raw); }
 export function sourceRef(source:Source):Ref { return {kind:'source',id:source.id,version:source.version}; }
 export function policyRef(policy:Policy):Ref { return {kind:'policy',id:policy.id,version:policy.version}; }
