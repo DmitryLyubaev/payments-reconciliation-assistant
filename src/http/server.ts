@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { z } from 'zod';
 import { idSchema, type Fixture } from '../domain/contracts.js';
 import { importFixture, loadSnapshot } from '../storage/imports.js';
-import { type Store, digestOf } from '../storage/store.js';
+import type { Store } from '../storage/store.js';
 import type { FakeScript, DecisionRequest } from '../investigation/contracts.js';
 import type { Workflow } from '../workflow/graph.js';
 import { recordDecision } from '../workflow/decisions.js';
@@ -120,15 +120,30 @@ export async function createServer(deps: HttpDeps): Promise<RunningServer> {
         return json(
           res,
           200,
-          rows.map((r) => getReviewView(deps.store, match![1], r.receipt_id)),
+          rows.map((r) =>
+            getReviewView(deps.store, match![1], r.receipt_id, {
+              identity: deps.workflow.identity,
+            }),
+          ),
         );
       }
       match = path.match(
         /^\/api\/batches\/([A-Za-z0-9_-]{1,64})\/receipts\/([A-Za-z0-9_-]{1,64})\/(review|investigations)$/,
       );
       if (match) {
-        if (req.method === 'GET' && match[3] === 'review')
-          return json(res, 200, getReviewView(deps.store, match[1], match[2]));
+        if (req.method === 'GET' && match[3] === 'review') {
+          const threadId = url.searchParams.has('threadId')
+            ? idSchema.parse(url.searchParams.get('threadId'))
+            : undefined;
+          return json(
+            res,
+            200,
+            getReviewView(deps.store, match[1], match[2], {
+              threadId,
+              identity: deps.workflow.identity,
+            }),
+          );
+        }
         if (req.method === 'POST' && match[3] === 'investigations') {
           z.strictObject({}).parse(await body(req));
           const snapshot = loadSnapshot(deps.store, match[1], match[2]);
@@ -138,15 +153,9 @@ export async function createServer(deps: HttpDeps): Promise<RunningServer> {
             ),
           );
           if (!fixture) throw new Error('NOT_FOUND');
-          const running = deps.workflow.start(snapshot, fixture.script);
-          void running.catch(() => {});
-          const row = deps.store.db
-            .prepare(
-              'SELECT id FROM investigations WHERE snapshot_digest=? AND script_digest=? ORDER BY seq DESC LIMIT 1',
-            )
-            .get(snapshot.digest, digestOf(fixture.script)) as { id: string } | undefined;
-          if (!row) throw new Error('START_FAILED');
-          return json(res, 202, { threadId: row.id });
+          const running = deps.workflow.begin(snapshot, fixture.script);
+          void running.completion.catch(() => {});
+          return json(res, 202, { threadId: running.threadId });
         }
       }
       match = path.match(/^\/api\/evidence\/(source|policy)\/([A-Za-z0-9_-]{1,64})\/([0-9]+)$/);

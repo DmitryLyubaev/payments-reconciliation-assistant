@@ -1,7 +1,8 @@
 import { analyse } from '../domain/reconcile.js';
 import type { Analysis, Ref } from '../domain/contracts.js';
 import type { Proposal } from '../investigation/contracts.js';
-import type { Store } from '../storage/store.js';
+import { type Store, digestOf } from '../storage/store.js';
+import { FAKE_IDENTITY, type ModelIdentity } from '../investigation/live-config.js';
 import { loadSnapshot } from '../storage/imports.js';
 export type ReviewView = {
   batchId: string;
@@ -18,15 +19,33 @@ export type ReviewView = {
   history: ReturnType<Store['history']>;
   errorCode?: string;
 };
-export function getReviewView(store: Store, batchId: string, receiptId: string): ReviewView {
+export function getReviewView(
+  store: Store,
+  batchId: string,
+  receiptId: string,
+  selection: { threadId?: string; identity?: ModelIdentity } = {},
+): ReviewView {
   const snapshot = loadSnapshot(store, batchId, receiptId),
     analysis = analyse(snapshot);
-  const row = store.db
+  const rows = store.db
     .prepare(
-      'SELECT id,status,proposal_id,state_json FROM investigations WHERE batch_id=? AND receipt_id=? AND snapshot_digest=? ORDER BY seq DESC LIMIT 1',
+      'SELECT id,status,proposal_id,state_json,model_json FROM investigations WHERE batch_id=? AND receipt_id=? AND snapshot_digest=? ORDER BY seq DESC',
     )
-    .get(batchId, receiptId, snapshot.digest) as
-    { id: string; status: string; proposal_id: string | null; state_json: string } | undefined;
+    .all(batchId, receiptId, snapshot.digest) as {
+    id: string;
+    status: string;
+    proposal_id: string | null;
+    state_json: string;
+    model_json: string | null;
+  }[];
+  const row = selection.threadId
+    ? rows.find((row) => row.id === selection.threadId)
+    : rows.find(
+        (row) =>
+          digestOf(row.model_json ? JSON.parse(row.model_json) : FAKE_IDENTITY) ===
+          digestOf(selection.identity ?? FAKE_IDENTITY),
+      );
+  if (selection.threadId && !row) throw new Error('NOT_FOUND');
   const p = row?.proposal_id
     ? (store.db.prepare('SELECT payload FROM proposals WHERE id=?').get(row.proposal_id) as
         { payload: string } | undefined)

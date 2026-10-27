@@ -32,6 +32,11 @@ export type WorkflowDeps = {
   live?: { identity: ModelIdentity; adapter: ModelAdapter };
 };
 export interface Workflow {
+  readonly identity: ModelIdentity;
+  begin(
+    snapshot: Snapshot,
+    script: FakeScript,
+  ): { threadId: string; completion: Promise<WorkflowView> };
   start(snapshot: Snapshot, script: FakeScript): Promise<WorkflowView>;
   resume(threadId: string, intentId: string): Promise<WorkflowView>;
   recover(threadId: string): Promise<WorkflowView>;
@@ -193,35 +198,44 @@ export function createWorkflow(deps: WorkflowDeps): Workflow {
     }
     return view(id);
   };
+  const begin: Workflow['begin'] = (snapshot, script) => {
+    if (deps.live) script = { id: 'live-model', version: identity.modelVersion, steps: [] };
+    const scriptDigest = digestOf(script);
+    const candidates = store.db
+      .prepare(
+        "SELECT id,model_json FROM investigations WHERE snapshot_digest=? AND script_digest=? AND status<>'failed' ORDER BY seq DESC",
+      )
+      .all(snapshot.digest, scriptDigest) as { id: string; model_json: string | null }[];
+    const existing = candidates.find(matchesIdentity);
+    if (existing)
+      return {
+        threadId: existing.id,
+        completion: serial(existing.id, async () => view(existing.id)),
+      };
+    const id = randomUUID();
+    const flow = initialInvestigationState(id, snapshot, Date.now(), identity.systemPrompt);
+    store.db
+      .prepare(
+        "INSERT INTO investigations(id,batch_id,receipt_id,snapshot_digest,snapshot_json,state_json,script_json,script_digest,status,model_json) VALUES(?,?,?,?,?,?,?,?,'investigating',?)",
+      )
+      .run(
+        id,
+        snapshot.batchId,
+        snapshot.receiptId,
+        snapshot.digest,
+        JSON.stringify(snapshot),
+        JSON.stringify(flow),
+        JSON.stringify(script),
+        scriptDigest,
+        JSON.stringify(identity),
+      );
+    return { threadId: id, completion: serial(id, () => execute(id, { flow })) };
+  };
   return {
-    async start(snapshot, script) {
-      if (deps.live) script = { id: 'live-model', version: identity.modelVersion, steps: [] };
-      const scriptDigest = digestOf(script);
-      const candidates = store.db
-        .prepare(
-          "SELECT id,model_json FROM investigations WHERE snapshot_digest=? AND script_digest=? AND status<>'failed' ORDER BY seq DESC",
-        )
-        .all(snapshot.digest, scriptDigest) as { id: string; model_json: string | null }[];
-      const existing = candidates.find(matchesIdentity);
-      if (existing) return serial(existing.id, async () => view(existing.id));
-      const id = randomUUID();
-      const flow = initialInvestigationState(id, snapshot, Date.now(), identity.systemPrompt);
-      store.db
-        .prepare(
-          "INSERT INTO investigations(id,batch_id,receipt_id,snapshot_digest,snapshot_json,state_json,script_json,script_digest,status,model_json) VALUES(?,?,?,?,?,?,?,?,'investigating',?)",
-        )
-        .run(
-          id,
-          snapshot.batchId,
-          snapshot.receiptId,
-          snapshot.digest,
-          JSON.stringify(snapshot),
-          JSON.stringify(flow),
-          JSON.stringify(script),
-          scriptDigest,
-          JSON.stringify(identity),
-        );
-      return serial(id, () => execute(id, { flow }));
+    identity,
+    begin,
+    start(snapshot, script) {
+      return begin(snapshot, script).completion;
     },
     resume(id, intentId) {
       return serial(id, async () => {

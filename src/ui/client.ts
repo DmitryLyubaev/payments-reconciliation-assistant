@@ -1,6 +1,6 @@
 import type { ReviewView } from '../http/views.js';
 type Demo = { id: string; label: string; batchIds: string[] };
-type Selection = { fixtureId: string; batchId: string; receiptId: string };
+type Selection = { fixtureId: string; batchId: string; receiptId: string; threadId?: string };
 const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 let token = '',
   demos: Demo[] = [],
@@ -175,7 +175,11 @@ async function refresh() {
   const selected = selection;
   const request = ++reviewRequest;
   try {
-    const view = await api(base() + '/review');
+    const view = await api(
+      base() +
+        '/review' +
+        (selected?.threadId ? '?threadId=' + encodeURIComponent(selected.threadId) : ''),
+    );
     if (selection === selected && request === reviewRequest) await render(view);
   } catch (error) {
     if (selection === selected && request === reviewRequest) throw error;
@@ -194,9 +198,13 @@ async function chooseReceipt(batchId: string, receiptId: string, start: boolean)
   resetSelection();
   selection = { fixtureId, batchId, receiptId };
   const selected = selection;
+  if (start) {
+    const started = await api(base() + '/investigations', {});
+    if (selection !== selected) return;
+    selection = { ...selected, threadId: started.threadId };
+  }
   sessionStorage.setItem('payment-review', JSON.stringify(selection));
-  if (start) await api(base() + '/investigations', {});
-  if (selection === selected) await refresh();
+  await refresh();
 }
 async function loadExample() {
   if (busy) return;

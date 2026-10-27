@@ -2,15 +2,22 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { request } from 'node:http';
 import { createServer } from '../../src/http/server.js';
-import { createWorkflow } from '../../src/workflow/graph.js';
+import { createWorkflow, type WorkflowDeps } from '../../src/workflow/graph.js';
+import { importFixture, loadSnapshot } from '../../src/storage/imports.js';
+import { createFakeModel } from '../../src/investigation/fake-model.js';
+import { LIVE_IDENTITY } from '../../src/investigation/live-config.js';
 import { startRunner } from '../../src/workflow/runner.js';
 import { applyIntent } from '../../src/workflow/decisions.js';
 import { tempStore } from '../support/temp-store.js';
 import { roundingFixture, roundingScript } from '../support/fixtures.js';
-async function setup(runtimeMode: 'fake/scripted' | 'anthropic' = 'fake/scripted') {
+async function setup(
+  runtimeMode: 'fake/scripted' | 'anthropic' = 'fake/scripted',
+  live?: WorkflowDeps['live'],
+) {
   const t = tempStore();
   const workflow = createWorkflow({
     store: t.store,
+    live,
     applyIntent: (id, expected) => applyIntent(t.store, id, undefined, expected),
   });
   const runner = startRunner({ store: t.store, workflow });
@@ -47,6 +54,93 @@ async function setup(runtimeMode: 'fake/scripted' | 'anthropic' = 'fake/scripted
     },
   };
 }
+
+test('live HTTP startup returns its registered thread on fresh and previously scripted receipts', async () => {
+  for (const priorFake of [false, true]) {
+    const f = roundingFixture('dev-rounding');
+    const t = await setup('anthropic', {
+      identity: LIVE_IDENTITY,
+      adapter: createFakeModel(roundingScript(f)),
+    });
+    try {
+      assert.equal((await t.post('/api/imports', { fixtureId: t.f.id })).status, 200);
+      const snapshot = loadSnapshot(t.store, f.sources[0].batchId, f.sources[0].receiptId);
+      let oldThread: string | undefined;
+      if (priorFake) {
+        const fake = createWorkflow({
+          store: t.store,
+          applyIntent: (id, expected) => applyIntent(t.store, id, undefined, expected),
+        });
+        try {
+          oldThread = (await fake.start(snapshot, roundingScript(f))).threadId;
+        } finally {
+          await fake.close();
+        }
+      }
+      const response = await t.post(
+        '/api/batches/dev-rounding-batch/receipts/dev-rounding-receipt/investigations',
+        {},
+      );
+      assert.equal(response.status, 202, `priorFake=${priorFake}`);
+      const started = await response.json();
+      const saved = await t.workflow.start(snapshot, roundingScript(f));
+      assert.equal(started.threadId, saved.threadId);
+      assert.notEqual(started.threadId, oldThread);
+      assert.equal(saved.status, 'awaiting_review');
+    } finally {
+      await t.finish();
+    }
+  }
+});
+
+test('live review selects the reused live thread and preserves explicit older proposal access', async () => {
+  const f = roundingFixture('dev-rounding');
+  const t = await setup('anthropic', {
+    identity: LIVE_IDENTITY,
+    adapter: createFakeModel(roundingScript(f)),
+  });
+  try {
+    importFixture(t.store, f);
+    const snapshot = loadSnapshot(t.store, f.sources[0].batchId, f.sources[0].receiptId);
+    const live = await t.workflow.start(snapshot, roundingScript(f));
+    const fakeFlow = createWorkflow({
+      store: t.store,
+      applyIntent: (id, expected) => applyIntent(t.store, id, undefined, expected),
+    });
+    let fake;
+    try {
+      fake = await fakeFlow.start(snapshot, roundingScript(f));
+    } finally {
+      await fakeFlow.close();
+    }
+    assert.equal((await t.workflow.start(snapshot, roundingScript(f))).threadId, live.threadId);
+    const base =
+      t.server.origin + '/api/batches/dev-rounding-batch/receipts/dev-rounding-receipt/review';
+    const selected = await (await fetch(base + '?threadId=' + live.threadId)).json();
+    assert.equal(selected.proposal.id, live.proposalId);
+    assert.equal(selected.proposal.modelVersion, 'claude-sonnet-5-5');
+    assert.equal((await (await fetch(base)).json()).proposal.id, live.proposalId);
+    const deliberate = await (await fetch(base + '?threadId=' + fake.threadId)).json();
+    assert.equal(deliberate.proposal.id, fake.proposalId);
+    assert.equal(deliberate.proposal.modelVersion, 'fake-scripted-v1');
+    assert.equal((await fetch(base + '?threadId=another-receipt')).status, 404);
+    await t.post('/api/decisions', {
+      proposalId: selected.proposal.id,
+      proposalVersion: selected.proposal.version,
+      snapshotDigest: selected.proposal.snapshotDigest,
+      idempotencyKey: 'selected-live',
+      decision: 'accept',
+    });
+    await t.runner.wake();
+    assert.equal(
+      (await (await fetch(base + '?threadId=' + live.threadId)).json()).outcome,
+      'reviewed_explained',
+    );
+    assert.equal((await (await fetch(base + '?threadId=' + fake.threadId)).json()).outcome, null);
+  } finally {
+    await t.finish();
+  }
+});
 
 test('session publishes the configured runtime model without provider credentials', async () => {
   const t = await setup('anthropic');

@@ -13,7 +13,16 @@ test('mode banner uses runtime metadata and the proposal identifies its own mode
   await page.goto('/');
   await expect(page.locator('#model-mode')).toContainText('claude-sonnet-5-5');
   await page.getByLabel('Demo case').selectOption('dev-rounding');
+  const selectedReview = page.waitForRequest((request) => {
+    const url = new URL(request.url());
+    return url.pathname.endsWith('/review') && url.searchParams.has('threadId');
+  });
   await page.getByRole('button', { name: 'Load example' }).click();
+  const selectedRequest = await selectedReview;
+  const savedThread = await page.evaluate(
+    () => JSON.parse(sessionStorage.getItem('payment-review')!).threadId,
+  );
+  expect(new URL(selectedRequest.url()).searchParams.get('threadId')).toBe(savedThread);
   await expect(page.locator('#references')).toContainText('Proposal model: fake-scripted-v1');
 });
 
@@ -89,7 +98,7 @@ test('a delayed review refresh cannot restore the previous receipt', async ({ pa
   const intercepted = new Promise<void>((resolve) => {
     captured = resolve;
   });
-  const oldReview = '**/api/batches/dev-rounding-batch/receipts/dev-rounding-receipt/review';
+  const oldReview = '**/api/batches/dev-rounding-batch/receipts/dev-rounding-receipt/review*';
   await page.route(oldReview, async (route) => {
     const response = await route.fetch();
     captured();

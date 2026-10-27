@@ -47,6 +47,10 @@ The rules-only baseline also matched all 36 categories. This study demonstrates 
 
 ## Limits and retained evidence
 
+After the study, independent code review found two HTTP integration issues: live startup reconstructed the wrong script identity, and review retrieval could select a newer scripted thread instead of the reused live thread. Both were reproduced in real HTTP/workflow tests with an injected no-network model. The release now returns the registered workflow ID directly and binds review retrieval to the selected thread or current model configuration. Tests cover both fresh and previously scripted receipts, live-to-scripted-to-live reuse, scoped older proposal access and the resulting approval target. These integration fixes were verified offline; the paid observations above remain historical measurements of `dd76b84`.
+
 There are twelve synthetic cases repeated three times, one model/configuration, and one successful development fixture. The held-out file split already existed in scripted and deterministic regression work; this is not an independent blind study. No held-out failure drove prompt tuning in this run. Automated evaluation decisions are harness actions, rather than observations of a human using the product.
 
 Local incremental case summaries, completed reports and the durable usage ledger are retained under ignored `results/` and `data/`. Per-turn provider blocks were persisted during each investigation but their disposable evaluation databases were deleted after case cleanup; they are not available as complete transcripts for this study. Published evidence contains reviewed summaries and no credentials or raw thinking blocks. Production use, AWS operation and an independent human usefulness study remain unproven.
+
+Deferred minor from review: optional retention/export of detailed live evaluation databases or transcripts for future investigations. This release still deletes those disposable per-case databases after returning the summary. The missing historical transcripts were not reconstructed or replaced with a new paid run.

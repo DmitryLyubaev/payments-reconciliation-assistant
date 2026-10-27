@@ -50,6 +50,8 @@ One Node process serves built static assets and a small HTTP API on loopback. A 
 
 The browser shows source totals, the difference, evidence, a proposal and audit history. Imported/model text is rendered as text. Only bundled development cases are selectable; held-out gold and arbitrary filesystem paths are not served. The browser reloads its session token after a restart while application state remains in SQLite.
 
+Startup returns the thread registered by the workflow rather than reconstructing a script/configuration key in HTTP. The browser saves that thread and supplies it on review reads. Reads without an explicit thread use the current model configuration; explicitly selected older threads remain available within the same receipt and current evidence snapshot. Each decision targets the displayed proposal ID/version/digest.
+
 Review refreshes are bound to the current selection and request. Evidence responses also require the latest evidence request and a reference in the current snapshot. Late responses from another receipt are discarded.
 
 A custom Node state machine was considered. LangGraph was selected to demonstrate a framework's checkpoint/interruption semantics. SQLite and a single process keep this milestone reproducible; they do not predetermine a later cloud architecture.
