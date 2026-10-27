@@ -1,4 +1,50 @@
 import { test, expect } from '@playwright/test';
+
+test('a delayed evidence response cannot overwrite the newly selected receipt', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.getByLabel('Demo case').selectOption('dev-rounding');
+  await page.getByRole('button', { name: 'Load example' }).click();
+  await expect(page.locator('#receipt-label')).toContainText('dev-rounding-receipt');
+  let release!: () => void;
+  const blocked = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let captured!: () => void;
+  const intercepted = new Promise<void>((resolve) => {
+    captured = resolve;
+  });
+  await page.route('**/api/evidence/source/dev-rounding-pos/1', async (route) => {
+    const response = await route.fetch();
+    captured();
+    await blocked;
+    await route.fulfill({ response });
+  });
+  try {
+    await page.getByRole('button', { name: 'dev-rounding-pos v1', exact: true }).click();
+    await intercepted;
+    await page.getByLabel('Demo case').selectOption('dev-missing-policy');
+    await page.getByRole('button', { name: 'Load example' }).click();
+    await expect(page.locator('#status')).toHaveText('Needs more evidence');
+    await page.getByRole('button', { name: 'dev-missing-policy-pos v1', exact: true }).click();
+    await expect(page.locator('#evidence-record')).toContainText('dev-missing-policy-pos');
+    const lateResponse = page.waitForResponse('**/api/evidence/source/dev-rounding-pos/1');
+    release();
+    await (await lateResponse).finished();
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        ),
+    );
+    await expect(page.locator('#evidence-record')).toContainText('dev-missing-policy-pos');
+    await expect(page.locator('#receipt-label')).toContainText('dev-missing-policy-receipt');
+    await expect(page.locator('#status')).toHaveText('Needs more evidence');
+  } finally {
+    release();
+  }
+});
 test('review evidence and accept without changing either source total', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Demo case').selectOption('dev-rounding');
@@ -11,6 +57,48 @@ test('review evidence and accept without changing either source total', async ({
   await expect(page.locator('#pos-total')).toHaveText('$22.12');
   await expect(page.locator('#accounting-total')).toHaveText('$22.11');
   await page.screenshot({ path: 'test-results/review-desktop.png', fullPage: true });
+});
+
+test('a delayed review refresh cannot restore the previous receipt', async ({ page }) => {
+  await page.goto('/');
+  await page.getByLabel('Demo case').selectOption('dev-rounding');
+  await page.getByRole('button', { name: 'Load example' }).click();
+  await expect(page.locator('#receipt-label')).toContainText('dev-rounding-receipt');
+  let release!: () => void;
+  const blocked = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let captured!: () => void;
+  const intercepted = new Promise<void>((resolve) => {
+    captured = resolve;
+  });
+  const oldReview = '**/api/batches/dev-rounding-batch/receipts/dev-rounding-receipt/review';
+  await page.route(oldReview, async (route) => {
+    const response = await route.fetch();
+    captured();
+    await blocked;
+    await route.fulfill({ response });
+  });
+  try {
+    await page.reload();
+    await intercepted;
+    await page.getByLabel('Demo case').selectOption('dev-missing-policy');
+    await page.getByRole('button', { name: 'Load example' }).click();
+    await expect(page.locator('#status')).toHaveText('Needs more evidence');
+    const lateResponse = page.waitForResponse(oldReview);
+    release();
+    await (await lateResponse).finished();
+    await page.evaluate(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+        ),
+    );
+    await expect(page.locator('#receipt-label')).toContainText('dev-missing-policy-receipt');
+    await expect(page.locator('#status')).toHaveText('Needs more evidence');
+  } finally {
+    release();
+  }
 });
 test('missing evidence has no acceptance action and source markup stays text', async ({ page }) => {
   await page.goto('/');

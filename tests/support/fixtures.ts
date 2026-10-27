@@ -56,6 +56,29 @@ export function fixtureSnapshot(fixture: Fixture): Snapshot {
     policies: fixture.policies,
   };
 }
+// Independent counterexamples: each source obeys its policy, but the item evidence differs.
+export function mismatchedItemFixtures() {
+  const differentSubtotal = roundingFixture('different-subtotal');
+  Object.assign(differentSubtotal.sources[1], {
+    subtotalMinor: '4010',
+    taxMinor: '401',
+    grossMinor: '4411',
+    lines: [
+      { id: 'a', netMinor: '2005' },
+      { id: 'b', netMinor: '2005' },
+    ],
+  });
+  const sameSubtotal = roundingFixture('same-subtotal');
+  sameSubtotal.sources[1].lines = [
+    { id: 'a', netMinor: '1004' },
+    { id: 'b', netMinor: '1006' },
+  ];
+  sameSubtotal.policies[1].rounding = 'per_item';
+  return [
+    { fixture: differentSubtotal, differenceMinor: '-2199' },
+    { fixture: sameSubtotal, differenceMinor: '1' },
+  ];
+}
 export function roundingScript(f: Fixture): FakeScript {
   return outcomeScript(f, 'explained_rounding', '1');
 }

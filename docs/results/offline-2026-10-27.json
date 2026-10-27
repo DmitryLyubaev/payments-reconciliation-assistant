@@ -2,14 +2,14 @@
   "mode": "fake/scripted",
   "modelSpend": "not incurred",
   "liveModelMetrics": null,
-  "generatedAt": "2026-10-27T04:11:32.893Z",
+  "generatedAt": "2026-10-27T04:38:43.850Z",
   "manifestDigest": "25b6b4ce7529ea641c4fb114c81680e2f88a026397a8c732d48aa7a13bc58815",
   "promptVersion": "rounding-investigation-v1",
-  "codeVersion": "8960d2dfc8cd1260122de10af69b0a1ab3246d90",
+  "codeVersion": "0830f9ea33707031156b5eedbee9c2ede9a4ea75",
   "workingTreeDirty": true,
-  "sourceDigest": "c2a9e7af3835e011c1534e3d516c6c513139baff5c1b3178cb7563b96b0bb960",
+  "sourceDigest": "9bfc4763165a71e28f650781f8f4905de03d2ec88e3fc48797e0465aea51abd7",
   "split": "heldout",
-  "elapsedMs": 1528.9044000000001,
+  "elapsedMs": 2326.9947,
   "passed": 12,
   "failed": 0,
   "cases": [
@@ -50,8 +50,8 @@
       "terminalCount": 0,
       "modelCalls": 0,
       "toolCalls": 0,
-      "elapsedMs": 162.90150000000017,
-      "baselineElapsedMs": 0.537900000000036,
+      "elapsedMs": 149.79520000000002,
+      "baselineElapsedMs": 0.626700000000028,
       "score": {
         "passed": true,
         "checks": {
@@ -106,8 +106,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 7,
-      "elapsedMs": 130.98720000000003,
-      "baselineElapsedMs": 0.26680000000010295,
+      "elapsedMs": 141.82909999999993,
+      "baselineElapsedMs": 0.2786999999998443,
       "score": {
         "passed": true,
         "checks": {
@@ -162,8 +162,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 7,
-      "elapsedMs": 124.27390000000014,
-      "baselineElapsedMs": 0.09500000000002728,
+      "elapsedMs": 104.7539999999999,
+      "baselineElapsedMs": 0.08719999999993888,
       "score": {
         "passed": true,
         "checks": {
@@ -218,8 +218,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 7,
-      "elapsedMs": 97.78399999999988,
-      "baselineElapsedMs": 0.0725999999999658,
+      "elapsedMs": 123.76960000000031,
+      "baselineElapsedMs": 0.1410000000000764,
       "score": {
         "passed": true,
         "checks": {
@@ -274,8 +274,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 6,
-      "elapsedMs": 111.13339999999994,
-      "baselineElapsedMs": 0.08670000000006439,
+      "elapsedMs": 135.087,
+      "baselineElapsedMs": 0.15049999999973807,
       "score": {
         "passed": true,
         "checks": {
@@ -320,8 +320,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 5,
-      "elapsedMs": 101.07200000000012,
-      "baselineElapsedMs": 0.04059999999981301,
+      "elapsedMs": 104.04970000000003,
+      "baselineElapsedMs": 0.068000000000211,
       "score": {
         "passed": true,
         "checks": {
@@ -381,8 +381,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 8,
-      "elapsedMs": 143.98580000000038,
-      "baselineElapsedMs": 0.040500000000065484,
+      "elapsedMs": 171.28600000000006,
+      "baselineElapsedMs": 0.05540000000019063,
       "score": {
         "passed": true,
         "checks": {
@@ -416,7 +416,7 @@
       "terminalCount": 0,
       "modelCalls": 0,
       "toolCalls": 0,
-      "elapsedMs": 27.86700000000019,
+      "elapsedMs": 170.5581000000002,
       "score": {
         "passed": true,
         "checks": {
@@ -471,8 +471,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 7,
-      "elapsedMs": 100.80139999999983,
-      "baselineElapsedMs": 0.06739999999990687,
+      "elapsedMs": 277.8071,
+      "baselineElapsedMs": 0.08140000000003056,
       "score": {
         "passed": true,
         "checks": {
@@ -527,8 +527,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 7,
-      "elapsedMs": 108.50550000000021,
-      "baselineElapsedMs": 0.0545999999999367,
+      "elapsedMs": 233.06489999999985,
+      "baselineElapsedMs": 0.08460000000013679,
       "score": {
         "passed": true,
         "checks": {
@@ -583,8 +583,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 7,
-      "elapsedMs": 103.31680000000006,
-      "baselineElapsedMs": 0.04349999999976717,
+      "elapsedMs": 276.8352,
+      "baselineElapsedMs": 0.09969999999975698,
       "score": {
         "passed": true,
         "checks": {
@@ -639,8 +639,8 @@
       "terminalCount": 1,
       "modelCalls": 3,
       "toolCalls": 7,
-      "elapsedMs": 106.32889999999998,
-      "baselineElapsedMs": 0.0591999999996915,
+      "elapsedMs": 252.45530000000008,
+      "baselineElapsedMs": 0.10989999999992506,
       "score": {
         "passed": true,
         "checks": {

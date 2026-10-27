@@ -1,7 +1,24 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { analyse } from '../../src/domain/reconcile.js';
-import { roundingFixture, fixtureSnapshot } from '../support/fixtures.js';
+import { roundingFixture, fixtureSnapshot, mismatchedItemFixtures } from '../support/fixtures.js';
+
+test('individually correct source calculations cannot explain different underlying items', () => {
+  for (const { fixture, differenceMinor } of mismatchedItemFixtures()) {
+    const result = analyse(fixtureSnapshot(fixture));
+    assert.equal(result.category, 'unexplained_mismatch', fixture.id);
+    assert.equal(result.eligible, false);
+    assert.equal(result.differenceMinor, differenceMinor);
+  }
+});
+
+test('shared item identity is required, while item ordering is irrelevant', () => {
+  const fixture = structuredClone(roundingFixture());
+  fixture.sources[1].lines = fixture.sources[1].lines!.map((line) => ({ ...line })).reverse();
+  assert.equal(analyse(fixtureSnapshot(fixture)).eligible, true);
+  fixture.sources[1].lines![0].id = 'different-item';
+  assert.equal(analyse(fixtureSnapshot(fixture)).category, 'unexplained_mismatch');
+});
 
 test('rounding explains one cent without changing sources', () => {
   const s = fixtureSnapshot(roundingFixture());

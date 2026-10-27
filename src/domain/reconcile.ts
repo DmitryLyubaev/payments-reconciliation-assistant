@@ -59,13 +59,22 @@ export function analyse(snapshot: Snapshot): Analysis {
   else if (differenceMinor === '0') category = 'matched';
   else if (missing.length) category = 'insufficient_evidence';
   else {
-    const explained = sources.every((source) => {
-      const policy = policies.find((p) => p.source === source.source)!;
-      const c = calculations.find(
-        (c) => c.sourceRef.id === source.id && c.rounding === policy.rounding,
-      );
-      return c?.grossMinor === source.grossMinor && c.taxMinor === source.taxMinor;
-    });
+    // Synthetic source copies share item IDs. Different items or net amounts cannot
+    // establish rounding as the cause, even when both calculations are valid.
+    const posItems = new Map(pos[0].lines!.map((line) => [line.id, line.netMinor]));
+    const sameUnderlyingItems =
+      pos[0].subtotalMinor === acct[0].subtotalMinor &&
+      posItems.size === acct[0].lines!.length &&
+      acct[0].lines!.every((line) => posItems.get(line.id) === line.netMinor);
+    const explained =
+      sameUnderlyingItems &&
+      sources.every((source) => {
+        const policy = policies.find((p) => p.source === source.source)!;
+        const c = calculations.find(
+          (c) => c.sourceRef.id === source.id && c.rounding === policy.rounding,
+        );
+        return c?.grossMinor === source.grossMinor && c.taxMinor === source.taxMinor;
+      });
     category = explained ? 'explained_rounding' : 'unexplained_mismatch';
   }
   return {

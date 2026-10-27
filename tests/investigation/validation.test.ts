@@ -2,7 +2,32 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { analyse } from '../../src/domain/reconcile.js';
 import { validateProposal } from '../../src/investigation/validate.js';
-import { roundingFixture, fixtureSnapshot } from '../support/fixtures.js';
+import { roundingFixture, fixtureSnapshot, mismatchedItemFixtures } from '../support/fixtures.js';
+
+test('proposal validation rejects a rounding explanation when source items disagree', () => {
+  for (const { fixture, differenceMinor } of mismatchedItemFixtures()) {
+    const snapshot = fixtureSnapshot(fixture);
+    const analysis = analyse(snapshot);
+    const candidate = {
+      id: 'false-rounding',
+      version: 1,
+      snapshotDigest: snapshot.digest,
+      category: 'explained_rounding',
+      differenceMinor,
+      evidenceRefs: analysis.requiredRefs,
+      calculationIds: analysis.calculations.map((c) => c.id),
+      explanation: 'Rounding explains the difference.',
+      nextStep: 'Review',
+      modelVersion: 'fake-v1',
+      promptVersion: 'v1',
+    };
+    assert.throws(
+      () => validateProposal(candidate, snapshot, analysis, analysis.calculations),
+      /INVALID_PROPOSAL/,
+      fixture.id,
+    );
+  }
+});
 test('proposal validation rejects fabricated amounts and missing evidence', () => {
   const s = fixtureSnapshot(roundingFixture());
   const a = analyse(s);

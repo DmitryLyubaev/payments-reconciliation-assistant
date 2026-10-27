@@ -24,6 +24,8 @@ Schemas distinguish absent item detail from malformed input. Evidence snapshots 
 
 The reason categories are `matched`, `explained_rounding`, `insufficient_evidence`, `contradictory_evidence` and `unexplained_mismatch`. A matching recorded total bypasses the model and does not imply that missing item-level evidence has been verified.
 
+A rounding explanation requires equal source subtotals and matching item IDs/net amounts, independent of item order. Item IDs identify the same item across the synthetic source copies. Each recorded tax/gross must also match its applicable rounding policy. Independently valid calculations on different items remain unexplained, even when the net subtotals agree.
+
 ## Investigation
 
 The graph exposes only `listEvidence`, `getEvidence` and `compareRounding`. Calls are scoped to one immutable snapshot. Tools cannot browse, execute SQL, alter records or approve anything. Replies are bounded and completed read/calculation results are saved for replay. Imported notes cannot turn themselves into policies.
@@ -45,5 +47,7 @@ Acceptance produces `reviewed_explained`. Rejection, unresolved acknowledgement 
 One Node process serves built static assets and a small HTTP API on loopback. A random per-launch session token, Host/Origin checks and same-origin responses protect mutations. The identity `demo-reviewer` is a local demonstration identity, not authenticated proof of a person's identity.
 
 The browser shows source totals, the difference, evidence, a proposal and audit history. Imported/model text is rendered as text. Only bundled development cases are selectable; held-out gold and arbitrary filesystem paths are not served. The browser reloads its session token after a restart while application state remains in SQLite.
+
+Review refreshes are bound to the current selection and request. Evidence responses also require the latest evidence request and a reference in the current snapshot. Late responses from another receipt are discarded.
 
 A custom Node state machine was considered. LangGraph was selected to demonstrate a framework's checkpoint/interruption semantics. SQLite and a single process keep this milestone reproducible; they do not predetermine a later cloud architecture.

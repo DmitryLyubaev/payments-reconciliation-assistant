@@ -5,8 +5,59 @@ import { createWorkflow } from '../../src/workflow/graph.js';
 import { recoverPending } from '../../src/workflow/runner.js';
 import { importFixture, loadSnapshot } from '../../src/storage/imports.js';
 import { tempStore } from '../support/temp-store.js';
-import { roundingFixture, roundingScript, outcomeScript } from '../support/fixtures.js';
+import {
+  roundingFixture,
+  roundingScript,
+  outcomeScript,
+  mismatchedItemFixtures,
+} from '../support/fixtures.js';
 import type { Proposal, DecisionRequest } from '../../src/investigation/contracts.js';
+test('different underlying items remain open and cannot receive rounding approval', async () => {
+  for (const { fixture, differenceMinor } of mismatchedItemFixtures()) {
+    const t = tempStore();
+    const flow = createWorkflow({
+      store: t.store,
+      applyIntent: (id, expected) => applyIntent(t.store, id, undefined, expected),
+    });
+    try {
+      importFixture(t.store, fixture);
+      const snapshot = loadSnapshot(
+        t.store,
+        fixture.sources[0].batchId,
+        fixture.sources[0].receiptId,
+      );
+      const view = await flow.start(
+        snapshot,
+        outcomeScript(fixture, 'unexplained_mismatch', differenceMinor),
+      );
+      assert.equal(view.status, 'awaiting_review', fixture.id);
+      const p = JSON.parse(
+        (
+          t.store.db.prepare('SELECT payload FROM proposals WHERE id=?').get(view.proposalId) as {
+            payload: string;
+          }
+        ).payload,
+      ) as Proposal;
+      const request: DecisionRequest = {
+        proposalId: p.id,
+        proposalVersion: p.version,
+        snapshotDigest: p.snapshotDigest,
+        idempotencyKey: 'review',
+        decision: 'accept',
+      };
+      assert.throws(() => recordDecision(t.store, request), /INELIGIBLE/);
+      const intent = recordDecision(t.store, { ...request, decision: 'acknowledge' });
+      assert.equal(applyIntent(t.store, intent.intentId).outcome, 'open_unresolved');
+      assert.deepEqual(
+        loadSnapshot(t.store, snapshot.batchId, snapshot.receiptId).sources,
+        snapshot.sources,
+      );
+    } finally {
+      await flow.close();
+      t.close();
+    }
+  }
+});
 async function setup(missing = false) {
   const t = tempStore();
   const flow = createWorkflow({ store: t.store, applyIntent: (id) => applyIntent(t.store, id) });

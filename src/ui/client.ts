@@ -7,7 +7,22 @@ let token = '',
   selection: Selection | null = null,
   current: ReviewView | null = null,
   poll: ReturnType<typeof setTimeout> | undefined,
-  busy = false;
+  busy = false,
+  reviewRequest = 0,
+  evidenceRequest = 0;
+function clearEvidence() {
+  evidenceRequest++;
+  el('evidence-record').hidden = true;
+  el('evidence-record').textContent = '';
+}
+function resetSelection() {
+  selection = null;
+  current = null;
+  reviewRequest++;
+  if (poll) clearTimeout(poll);
+  clearEvidence();
+  el('review').hidden = true;
+}
 function money(value: string | null, positiveSign = false): string {
   if (value === null) return 'Unavailable';
   const n = BigInt(value),
@@ -40,6 +55,7 @@ function base() {
   return `/api/batches/${selection.batchId}/receipts/${selection.receiptId}`;
 }
 async function render(view: ReviewView) {
+  if (JSON.stringify(current?.evidenceRefs) !== JSON.stringify(view.evidenceRefs)) clearEvidence();
   current = view;
   el('review').hidden = false;
   el('receipt-label').textContent = `${view.receiptId} / AUD`;
@@ -106,16 +122,26 @@ async function render(view: ReviewView) {
     const button = document.createElement('button');
     button.type = 'button';
     button.textContent = `${ref.id} v${ref.version}`;
-    button.addEventListener(
-      'click',
-      () =>
-        void api(`/api/evidence/${ref.kind}/${ref.id}/${ref.version}`)
-          .then((record) => {
-            el('evidence-record').textContent = JSON.stringify(record, null, 2);
-            el('evidence-record').hidden = false;
-          })
-          .catch(showError),
-    );
+    button.addEventListener('click', () => {
+      const selected = selection;
+      const request = ++evidenceRequest;
+      void api(`/api/evidence/${ref.kind}/${ref.id}/${ref.version}`)
+        .then((record) => {
+          if (
+            selection !== selected ||
+            request !== evidenceRequest ||
+            !current?.evidenceRefs.some(
+              (r) => r.kind === ref.kind && r.id === ref.id && r.version === ref.version,
+            )
+          )
+            return;
+          el('evidence-record').textContent = JSON.stringify(record, null, 2);
+          el('evidence-record').hidden = false;
+        })
+        .catch((error) => {
+          if (selection === selected && request === evidenceRequest) showError(error);
+        });
+    });
     const kind = document.createElement('small');
     kind.textContent = ref.kind;
     row.append(button, kind);
@@ -144,7 +170,14 @@ async function render(view: ReviewView) {
     poll = setTimeout(() => void refresh().catch(showError), 200);
 }
 async function refresh() {
-  await render(await api(base() + '/review'));
+  const selected = selection;
+  const request = ++reviewRequest;
+  try {
+    const view = await api(base() + '/review');
+    if (selection === selected && request === reviewRequest) await render(view);
+  } catch (error) {
+    if (selection === selected && request === reviewRequest) throw error;
+  }
 }
 function showError(error: unknown) {
   message(
@@ -156,16 +189,19 @@ function showError(error: unknown) {
 }
 async function chooseReceipt(batchId: string, receiptId: string, start: boolean) {
   const fixtureId = el<HTMLSelectElement>('fixture').value;
+  resetSelection();
   selection = { fixtureId, batchId, receiptId };
+  const selected = selection;
   sessionStorage.setItem('payment-review', JSON.stringify(selection));
-  el('evidence-record').hidden = true;
   if (start) await api(base() + '/investigations', {});
-  await refresh();
+  if (selection === selected) await refresh();
 }
 async function loadExample() {
   if (busy) return;
   busy = true;
   el<HTMLButtonElement>('load').disabled = true;
+  el<HTMLSelectElement>('fixture').disabled = true;
+  resetSelection();
   message('Loading synthetic evidence...');
   try {
     const demo = demos.find((d) => d.id === el<HTMLSelectElement>('fixture').value)!;
@@ -190,6 +226,7 @@ async function loadExample() {
   } finally {
     busy = false;
     el<HTMLButtonElement>('load').disabled = false;
+    el<HTMLSelectElement>('fixture').disabled = false;
     if (current) await render(current);
   }
 }
