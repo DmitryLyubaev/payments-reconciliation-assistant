@@ -2,6 +2,8 @@
 
 The fixture catalogue was frozen on 27 October 2026. `fixtures/manifest.json` records the split, case paths, scenario and SHA-256 of every data, gold and scripted-reply file. Loading an evaluation verifies all those hashes before running a case. The manifest itself is included in the report by digest.
 
+Git attributes disable text conversion for the byte-hashed fixture tree. A regression checks a real Git checkout with Windows automatic line-ending conversion enabled; it must preserve the original manifest and file hashes.
+
 Four development cases are separate from twelve held-out semantic cases. Expected tax/gross amounts were entered from hand calculations, not computed by the application under test. In particular, the second rounding example uses two 1,015-cent net items: per-item tax is 204 cents and gross is 2,234 cents; total-level tax is 203 cents and gross is 2,233 cents.
 
 The twelve cases cover an exact match, two rounding amounts, an unexplained difference, absent detail, missing policy, conflicting policies, unsupported currency, inconsistent totals, misleading source text, duplicate import and a pending proposal invalidated by a new evidence version. Duplicate and stale cases use real import/decision sequences. Process crash, malformed output, timeouts and transient errors are also tested separately in the Node suite.

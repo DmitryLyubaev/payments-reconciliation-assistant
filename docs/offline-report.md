@@ -32,6 +32,10 @@ The twelve frozen cases passed again after these review fixes; their manifest an
 
 These were observed software-test failures, not claims of model drift or production incidents.
 
+## Publication checkout correction
+
+The first hosted Windows run failed two catalogue/evaluation tests with `FIXTURE_DIGEST`. Git's automatic LF-to-CRLF conversion changed the frozen fixture bytes during checkout. A local regression using a real Git index and `core.autocrlf=true` reproduced that failure. Repository attributes now preserve fixture bytes exactly, without changing the frozen files, manifest or validator. The added regression increases the current Node suite to 44 tests; the table above retains the earlier local verification observation. See the hosted workflow history for the failed run and the subsequent verification.
+
 ## Evidence boundaries
 
 The offline evaluator measures workflow contracts with authored replies. It does not measure real-model reasoning, production adoption, independent human agreement or cloud operation. The rules-only baseline can diagnose this deliberately small domain. No AI superiority or productivity benefit is claimed.

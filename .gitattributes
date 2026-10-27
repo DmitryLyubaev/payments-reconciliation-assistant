@@ -1,0 +1,2 @@
+# Frozen fixtures are byte-hashed. Preserve their committed bytes on every checkout.
+fixtures/** -text
