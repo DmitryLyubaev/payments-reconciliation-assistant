@@ -9,7 +9,7 @@ import { createTools } from '../investigation/tools.js';import { createFakeModel
 import type { FakeScript,InvestigationState } from '../investigation/contracts.js';
 export type AppliedIntent={state:'applied'|'invalidated';outcome:'reviewed_explained'|'open_unresolved';proposalId:string};
 export type WorkflowView={threadId:string;status:'matched'|'investigating'|'awaiting_review'|'open_unresolved'|'failed'|'completed';proposalId?:string};
-export type WorkflowDeps={store:Store;applyIntent:(intentId:string)=>AppliedIntent|Promise<AppliedIntent>;scriptResolver?:(id:string)=>FakeScript};
+export type WorkflowDeps={store:Store;applyIntent:(intentId:string,expectedProposalId:string)=>AppliedIntent|Promise<AppliedIntent>;scriptResolver?:(id:string)=>FakeScript};
 export interface Workflow{start(snapshot:Snapshot,script:FakeScript):Promise<WorkflowView>;resume(threadId:string,intentId:string):Promise<WorkflowView>;recover(threadId:string):Promise<WorkflowView>;close():Promise<void>}
 type InvestigationRow={id:string;snapshot_json:string;script_json:string;script_digest:string;state_json:string;status:WorkflowView['status'];proposal_id:string|null};
 export function createWorkflow(deps:WorkflowDeps):Workflow{
@@ -41,7 +41,7 @@ export function createWorkflow(deps:WorkflowDeps):Workflow{
    });return {};
   })
   .addNode('review',s=>({intentId:interrupt({proposalId:s.flow.result?.status==='proposal'?s.flow.result.proposal.id:null,snapshotDigest:s.flow.snapshotDigest}) as string}))
-  .addNode('apply',async s=>{const applied=await deps.applyIntent(s.intentId);store.db.prepare('UPDATE investigations SET status=? WHERE id=?').run(applied.state==='invalidated'?'open_unresolved':'completed',s.flow.threadId);return {};})
+  .addNode('apply',async s=>{if(s.flow.result?.status!=='proposal')throw new Error('INVALID_GRAPH_STATE');const applied=await deps.applyIntent(s.intentId,s.flow.result.proposal.id);store.db.prepare('UPDATE investigations SET status=? WHERE id=?').run(applied.state==='invalidated'?'open_unresolved':'completed',s.flow.threadId);return {};})
   .addEdge(START,'precheck').addConditionalEdges('precheck',s=>read(s.flow.threadId).status==='matched'?END:'investigate')
   .addConditionalEdges('investigate',s=>!s.flow.result?'investigate':s.flow.result.status==='proposal'?'persist':END)
   .addEdge('persist','review').addEdge('review','apply').addEdge('apply',END).compile({checkpointer:saver});
