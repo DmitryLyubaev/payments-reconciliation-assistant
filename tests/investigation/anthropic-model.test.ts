@@ -6,6 +6,54 @@ import { tmpdir } from 'node:os';
 import { LiveBudget } from '../../src/investigation/live-budget.js';
 import { createAnthropicModel } from '../../src/investigation/anthropic-model.js';
 
+test('Claude strict tool schemas omit unsupported integer minimum constraints', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'payment strict schema '));
+  const budget = new LiveBudget(join(dir, 'budget.sqlite'));
+  try {
+    const model = createAnthropicModel({
+      apiKey: 'test',
+      budget,
+      transport: async (_url, init) => {
+        const request = JSON.parse(String(init?.body));
+        if (JSON.stringify(request.tools).includes('"minimum"'))
+          return Response.json(
+            {
+              type: 'error',
+              error: { type: 'invalid_request_error', message: 'integer minimum unsupported' },
+            },
+            { status: 400 },
+          );
+        return Response.json({
+          id: 'schema-ok',
+          model: 'claude-sonnet-5-5',
+          stop_reason: 'tool_use',
+          content: [{ type: 'tool_use', id: 'toolu_1', name: 'listEvidence', input: {} }],
+          usage: { input_tokens: 1, output_tokens: 1 },
+        });
+      },
+    });
+    assert.equal(
+      (
+        await model.next(
+          {
+            threadId: 'schema',
+            turn: 0,
+            messages: [
+              { role: 'system', content: 's' },
+              { role: 'user', batchId: 'b', receiptId: 'r' },
+            ],
+          },
+          new AbortController().signal,
+        )
+      ).type,
+      'tools',
+    );
+  } finally {
+    budget.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('Claude adapter reserves before transport and preserves signed blocks and tool results', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'payment claude '));
   const budget = new LiveBudget(join(dir, 'budget.sqlite'));

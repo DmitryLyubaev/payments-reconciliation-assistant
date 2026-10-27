@@ -72,6 +72,9 @@ export async function runLiveEvaluation(options: LiveOptions) {
     runMeasuredSpendUsd: usdFromNano(
       (BigInt(budget.spentNanoUsd) - BigInt(before.spentNanoUsd)).toString(),
     ),
+    runActualSpendUsd: runCalls.some((call) => call.chargedNanoUsd === null)
+      ? null
+      : usdFromNano((BigInt(budget.spentNanoUsd) - BigInt(before.spentNanoUsd)).toString()),
     budget,
     runCalls,
     cases,

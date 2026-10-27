@@ -5,10 +5,16 @@ const object = (properties: Record<string, unknown>, required = Object.keys(prop
   additionalProperties: false,
 });
 const string = { type: 'string' };
+export const CLAUDE_SETTINGS = {
+  max_tokens: 4096,
+  thinking: { type: 'between_tools' },
+  output_config: { effort: 'low' },
+  tool_choice: { type: 'auto' },
+};
 const ref = object({
   kind: { type: 'string', enum: ['source', 'policy'] },
   id: string,
-  version: { type: 'integer', minimum: 1 },
+  version: { type: 'integer' },
 });
 export const CLAUDE_TOOLS = [
   {

@@ -1,10 +1,13 @@
 import { SYSTEM_PROMPT, PROMPT_VERSION } from './prompt.js';
 import { LIVE_MODEL } from './live-budget.js';
+import { CLAUDE_SETTINGS, CLAUDE_TOOLS } from './live-tools.js';
+import { digestOf } from '../storage/store.js';
 export type ModelIdentity = {
   mode: 'fake' | 'anthropic';
   modelVersion: string;
   promptVersion: string;
   systemPrompt: string;
+  requestDigest?: string;
 };
 export const FAKE_IDENTITY: ModelIdentity = {
   mode: 'fake',
@@ -16,6 +19,7 @@ export const LIVE_IDENTITY: ModelIdentity = {
   mode: 'anthropic',
   modelVersion: LIVE_MODEL,
   promptVersion: 'rounding-claude-v1',
+  requestDigest: digestOf({ model: LIVE_MODEL, ...CLAUDE_SETTINGS, tools: CLAUDE_TOOLS }),
   systemPrompt:
     SYSTEM_PROMPT +
     `

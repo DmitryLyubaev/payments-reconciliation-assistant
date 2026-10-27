@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { ModelAdapter, ModelInput, ModelReply } from './contracts.js';
 import { LiveBudget, LIVE_MODEL } from './live-budget.js';
-import { CLAUDE_TOOLS } from './live-tools.js';
+import { CLAUDE_TOOLS, CLAUDE_SETTINGS } from './live-tools.js';
 
 function conversation(input: ModelInput) {
   const messages: { role: 'user' | 'assistant'; content: unknown }[] = [];
@@ -48,10 +48,7 @@ export function createAnthropicModel(options: {
     async next(input, signal) {
       const body = JSON.stringify({
         model: LIVE_MODEL,
-        max_tokens: 4096,
-        thinking: { type: 'between_tools' },
-        output_config: { effort: 'low' },
-        tool_choice: { type: 'auto' },
+        ...CLAUDE_SETTINGS,
         tools: CLAUDE_TOOLS,
         ...conversation(input),
       });
