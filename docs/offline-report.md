@@ -19,7 +19,7 @@ The elapsed value is one local run over twelve cases, not a service-level guaran
 
 The Node suite passed all four actual crash/relaunch boundaries. A separate run of the compiled CLI through HTTP also verified a real server restart: the session token changed, the same proposal and evidence digest returned, replayed approval produced one outcome and one terminal audit event, original amounts stayed at 2,212 and 2,211 cents, and the scripted model-attempt count remained three.
 
-Desktop and 360px browser layouts were inspected. Browser tests cover text-only rendering of imported markup, the absence of acceptance when evidence is missing, and delayed evidence/review responses after switching receipts. The GitHub workflow is prepared but has not run on a hosted runner.
+Desktop and 360px browser layouts were inspected. Browser tests cover text-only rendering of imported markup, the absence of acceptance when evidence is missing, and delayed evidence/review responses after switching receipts. At the time of this local verification, the GitHub workflow was prepared and had not run on a hosted runner. Subsequent hosted results are available in [GitHub Actions](https://github.com/DmitryLyubaev/payments-reconciliation-assistant/actions/workflows/ci.yml).
 
 ## Observed failures and corrections
 

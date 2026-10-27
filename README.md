@@ -54,7 +54,7 @@ npm.cmd run evaluate:offline
 
 `check` builds and typechecks the app, runs the Node suite and runs browser checks. Actual child processes test persisted review and four crash boundaries. The offline evaluator uses twelve frozen cases and compares outcomes with independent expected answers and a rules-only baseline. Its JSON/Markdown reports are written to ignored `results/`.
 
-See the [dated offline report](docs/offline-report.md), [restart demonstration](docs/demo.md), [technical design](docs/design.md) and [evaluation method](docs/evaluation.md). The GitHub Actions workflow is prepared for offline checks; hosted CI has not run for this local repository.
+See the [dated offline report](docs/offline-report.md), [restart demonstration](docs/demo.md), [technical design](docs/design.md) and [evaluation method](docs/evaluation.md). [GitHub Actions](https://github.com/DmitryLyubaev/payments-reconciliation-assistant/actions/workflows/ci.yml) runs the offline checks on Windows. The workflow uses synthetic data and scripted responses, with no paid model calls or deployment.
 
 ## What the implementation demonstrates
 
