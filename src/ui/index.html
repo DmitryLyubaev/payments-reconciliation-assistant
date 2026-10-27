@@ -1,12 +1,77 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payments reconciliation</title><link rel="stylesheet" href="/assets/styles.css"><script type="module" src="/assets/client.js"></script></head>
-<body><div class="app"><header><div class="brand">Payments reconciliation</div><span class="mode">Local demo / fake model</span></header><main>
-<div class="title-row"><div><h1>Review an exception</h1><p id="receipt-label" class="muted">Choose a synthetic example to begin.</p></div><span id="status" role="status" aria-live="polite">Ready</span></div>
-<div class="toolbar"><label>Demo case<select id="fixture" aria-label="Demo case"></select></label><button id="load" type="button">Load example</button><label id="receipt-picker" hidden>Receipt<select id="receipt" aria-label="Receipt"></select></label></div>
-<p id="feedback" role="status" aria-live="polite"></p>
-<section id="review" hidden>
-<div class="metrics"><article><span class="muted">POS receipt total</span><strong id="pos-total"></strong><small>AUD / source record</small></article><article><span class="muted">Accounting export total</span><strong id="accounting-total"></strong><small>AUD / imported record</small></article><article><span class="muted">Difference</span><strong id="difference"></strong><small>POS minus accounting</small></article></div>
-<div class="columns"><section class="panel"><h2>Evidence</h2><div id="evidence-links"></div><pre id="evidence-record" hidden></pre></section><section class="panel"><h2>Proposed explanation</h2><p id="explanation"></p><p id="references" class="muted"></p><p id="next-step"></p><p class="muted">A review decision records an explanation. It leaves the original amounts unchanged.</p><div class="actions"><button id="accept" class="primary" type="button" hidden>Accept explanation</button><button id="reject" type="button" hidden>Reject explanation</button><button id="acknowledge" type="button" hidden>Keep exception open</button></div></section></div>
-<details class="panel history"><summary>Investigation history</summary><ol id="history"></ol></details>
-</section><footer>Fictional calculation policies. Synthetic AUD records only.</footer>
-</main></div></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Payments reconciliation</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/client.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="brand">Payments reconciliation</div>
+        <span class="mode">Local demo / fake model</span>
+      </header>
+      <main>
+        <div class="title-row">
+          <div>
+            <h1>Review an exception</h1>
+            <p id="receipt-label" class="muted">Choose a synthetic example to begin.</p>
+          </div>
+          <span id="status" role="status" aria-live="polite">Ready</span>
+        </div>
+        <div class="toolbar">
+          <label>Demo case<select id="fixture" aria-label="Demo case"></select></label
+          ><button id="load" type="button">Load example</button
+          ><label id="receipt-picker" hidden
+            >Receipt<select id="receipt" aria-label="Receipt"></select
+          ></label>
+        </div>
+        <p id="feedback" role="status" aria-live="polite"></p>
+        <section id="review" hidden>
+          <div class="metrics">
+            <article>
+              <span class="muted">POS receipt total</span><strong id="pos-total"></strong
+              ><small>AUD / source record</small>
+            </article>
+            <article>
+              <span class="muted">Accounting export total</span
+              ><strong id="accounting-total"></strong><small>AUD / imported record</small>
+            </article>
+            <article>
+              <span class="muted">Difference</span><strong id="difference"></strong
+              ><small>POS minus accounting</small>
+            </article>
+          </div>
+          <div class="columns">
+            <section class="panel">
+              <h2>Evidence</h2>
+              <div id="evidence-links"></div>
+              <pre id="evidence-record" hidden></pre>
+            </section>
+            <section class="panel">
+              <h2>Proposed explanation</h2>
+              <p id="explanation"></p>
+              <p id="references" class="muted"></p>
+              <p id="next-step"></p>
+              <p class="muted">
+                A review decision records an explanation. It leaves the original amounts unchanged.
+              </p>
+              <div class="actions">
+                <button id="accept" class="primary" type="button" hidden>Accept explanation</button
+                ><button id="reject" type="button" hidden>Reject explanation</button
+                ><button id="acknowledge" type="button" hidden>Keep exception open</button>
+              </div>
+            </section>
+          </div>
+          <details class="panel history">
+            <summary>Investigation history</summary>
+            <ol id="history"></ol>
+          </details>
+        </section>
+        <footer>Fictional calculation policies. Synthetic AUD records only.</footer>
+      </main>
+    </div>
+  </body>
+</html>

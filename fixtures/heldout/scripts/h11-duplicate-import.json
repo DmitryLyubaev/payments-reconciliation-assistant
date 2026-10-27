@@ -1,0 +1,116 @@
+{
+  "id": "h11-duplicate-import-script",
+  "version": "1",
+  "steps": [
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "list",
+          "name": "listEvidence",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "read0",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h11-duplicate-import-pos",
+            "version": 1
+          }
+        },
+        {
+          "id": "read1",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h11-duplicate-import-acct",
+            "version": 1
+          }
+        },
+        {
+          "id": "read2",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h11-duplicate-import-p1",
+            "version": 1
+          }
+        },
+        {
+          "id": "read3",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h11-duplicate-import-p2",
+            "version": 1
+          }
+        },
+        {
+          "id": "calc0",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h11-duplicate-import-pos",
+              "version": 1
+            },
+            "rounding": "per_item"
+          }
+        },
+        {
+          "id": "calc1",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h11-duplicate-import-acct",
+              "version": 1
+            },
+            "rounding": "per_receipt"
+          }
+        }
+      ]
+    },
+    {
+      "type": "proposal",
+      "proposal": {
+        "category": "explained_rounding",
+        "differenceMinor": "1",
+        "evidenceRefs": [
+          {
+            "kind": "source",
+            "id": "h11-duplicate-import-pos",
+            "version": 1
+          },
+          {
+            "kind": "source",
+            "id": "h11-duplicate-import-acct",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h11-duplicate-import-p1",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h11-duplicate-import-p2",
+            "version": 1
+          }
+        ],
+        "calculationIds": [
+          "h11-duplicate-import-pos-v1-per_item",
+          "h11-duplicate-import-acct-v1-per_receipt"
+        ],
+        "explanation": "The POS rounds tax per item while the accounting export rounds after summing. The fictional policies explain the one-cent difference.",
+        "nextStep": "Review the explanation. Retain the original totals."
+      }
+    }
+  ]
+}

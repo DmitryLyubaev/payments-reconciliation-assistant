@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "h04-unexplained",
+  "sources": [
+    {
+      "version": 1,
+      "batchId": "h04-unexplained-batch",
+      "receiptId": "h04-unexplained-receipt",
+      "currency": "AUD",
+      "basis": "exclusive",
+      "rateBps": 1000,
+      "subtotalMinor": "2010",
+      "lines": [
+        {
+          "id": "a",
+          "netMinor": "1005"
+        },
+        {
+          "id": "b",
+          "netMinor": "1005"
+        }
+      ],
+      "id": "h04-unexplained-pos",
+      "source": "pos",
+      "taxMinor": "204",
+      "grossMinor": "2214"
+    },
+    {
+      "version": 1,
+      "batchId": "h04-unexplained-batch",
+      "receiptId": "h04-unexplained-receipt",
+      "currency": "AUD",
+      "basis": "exclusive",
+      "rateBps": 1000,
+      "subtotalMinor": "2010",
+      "lines": [
+        {
+          "id": "a",
+          "netMinor": "1005"
+        },
+        {
+          "id": "b",
+          "netMinor": "1005"
+        }
+      ],
+      "id": "h04-unexplained-acct",
+      "source": "accounting",
+      "taxMinor": "201",
+      "grossMinor": "2211"
+    }
+  ],
+  "policies": [
+    {
+      "id": "h04-unexplained-p1",
+      "version": 1,
+      "batchId": "h04-unexplained-batch",
+      "receiptIds": [
+        "h04-unexplained-receipt"
+      ],
+      "source": "pos",
+      "rateBps": 1000,
+      "rounding": "per_item",
+      "text": "Fictional POS policy: round tax per item."
+    },
+    {
+      "id": "h04-unexplained-p2",
+      "version": 1,
+      "batchId": "h04-unexplained-batch",
+      "receiptIds": [
+        "h04-unexplained-receipt"
+      ],
+      "source": "accounting",
+      "rateBps": 1000,
+      "rounding": "per_receipt",
+      "text": "Fictional export policy: round tax after summing."
+    }
+  ]
+}

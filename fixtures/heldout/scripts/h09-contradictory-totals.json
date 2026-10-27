@@ -1,0 +1,116 @@
+{
+  "id": "h09-contradictory-totals-script",
+  "version": "1",
+  "steps": [
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "list",
+          "name": "listEvidence",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "read0",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h09-contradictory-totals-pos",
+            "version": 1
+          }
+        },
+        {
+          "id": "read1",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h09-contradictory-totals-acct",
+            "version": 1
+          }
+        },
+        {
+          "id": "read2",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h09-contradictory-totals-p1",
+            "version": 1
+          }
+        },
+        {
+          "id": "read3",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h09-contradictory-totals-p2",
+            "version": 1
+          }
+        },
+        {
+          "id": "calc0",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h09-contradictory-totals-pos",
+              "version": 1
+            },
+            "rounding": "per_item"
+          }
+        },
+        {
+          "id": "calc1",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h09-contradictory-totals-acct",
+              "version": 1
+            },
+            "rounding": "per_receipt"
+          }
+        }
+      ]
+    },
+    {
+      "type": "proposal",
+      "proposal": {
+        "category": "contradictory_evidence",
+        "differenceMinor": "2",
+        "evidenceRefs": [
+          {
+            "kind": "source",
+            "id": "h09-contradictory-totals-pos",
+            "version": 1
+          },
+          {
+            "kind": "source",
+            "id": "h09-contradictory-totals-acct",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h09-contradictory-totals-p1",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h09-contradictory-totals-p2",
+            "version": 1
+          }
+        ],
+        "calculationIds": [
+          "h09-contradictory-totals-pos-v1-per_item",
+          "h09-contradictory-totals-acct-v1-per_receipt"
+        ],
+        "explanation": "The imported evidence contains conflicting facts or applicable policies.",
+        "nextStep": "Keep the exception open and investigate the evidence."
+      }
+    }
+  ]
+}

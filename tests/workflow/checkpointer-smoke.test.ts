@@ -9,15 +9,24 @@ import { Annotation, StateGraph, START, END, interrupt, Command } from '@langcha
 
 test('native SQLite checkpoints survive closing and reopening a file with spaces', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'payment checkpoint '));
-  const state = Annotation.Root({approved:Annotation<boolean>});
-  const build = (db: Database.Database) => new StateGraph(state).addNode('review', () => ({approved:interrupt('Review?')})).addEdge(START,'review').addEdge('review',END).compile({checkpointer:new SqliteSaver(db)});
-  let db = new Database(join(dir,'checkpoints.sqlite'));
+  const state = Annotation.Root({ approved: Annotation<boolean> });
+  const build = (db: Database.Database) =>
+    new StateGraph(state)
+      .addNode('review', () => ({ approved: interrupt('Review?') }))
+      .addEdge(START, 'review')
+      .addEdge('review', END)
+      .compile({ checkpointer: new SqliteSaver(db) });
+  let db = new Database(join(dir, 'checkpoints.sqlite'));
   try {
-    const config = {configurable:{thread_id:'smoke'}};
-    const first = await build(db).invoke({approved:false}, config);
+    const config = { configurable: { thread_id: 'smoke' } };
+    const first = await build(db).invoke({ approved: false }, config);
     assert.ok(first.__interrupt__?.length);
-    db.close(); db = new Database(join(dir,'checkpoints.sqlite'));
-    const final = await build(db).invoke(new Command({resume:true}), config);
-    assert.equal(final.approved,true);
-  } finally { if (db.open) db.close(); rmSync(dir,{recursive:true,force:true}); }
+    db.close();
+    db = new Database(join(dir, 'checkpoints.sqlite'));
+    const final = await build(db).invoke(new Command({ resume: true }), config);
+    assert.equal(final.approved, true);
+  } finally {
+    if (db.open) db.close();
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

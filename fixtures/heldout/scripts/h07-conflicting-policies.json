@@ -1,0 +1,130 @@
+{
+  "id": "h07-conflicting-policies-script",
+  "version": "1",
+  "steps": [
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "list",
+          "name": "listEvidence",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "read0",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h07-conflicting-policies-pos",
+            "version": 1
+          }
+        },
+        {
+          "id": "read1",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h07-conflicting-policies-acct",
+            "version": 1
+          }
+        },
+        {
+          "id": "read2",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h07-conflicting-policies-p1",
+            "version": 1
+          }
+        },
+        {
+          "id": "read3",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h07-conflicting-policies-p2",
+            "version": 1
+          }
+        },
+        {
+          "id": "read4",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h07-conflicting-policies-p3",
+            "version": 1
+          }
+        },
+        {
+          "id": "calc0",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h07-conflicting-policies-pos",
+              "version": 1
+            },
+            "rounding": "per_item"
+          }
+        },
+        {
+          "id": "calc1",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h07-conflicting-policies-acct",
+              "version": 1
+            },
+            "rounding": "per_receipt"
+          }
+        }
+      ]
+    },
+    {
+      "type": "proposal",
+      "proposal": {
+        "category": "contradictory_evidence",
+        "differenceMinor": "1",
+        "evidenceRefs": [
+          {
+            "kind": "source",
+            "id": "h07-conflicting-policies-pos",
+            "version": 1
+          },
+          {
+            "kind": "source",
+            "id": "h07-conflicting-policies-acct",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h07-conflicting-policies-p1",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h07-conflicting-policies-p2",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h07-conflicting-policies-p3",
+            "version": 1
+          }
+        ],
+        "calculationIds": [
+          "h07-conflicting-policies-pos-v1-per_item",
+          "h07-conflicting-policies-acct-v1-per_receipt"
+        ],
+        "explanation": "The imported evidence contains conflicting facts or applicable policies.",
+        "nextStep": "Keep the exception open and investigate the evidence."
+      }
+    }
+  ]
+}

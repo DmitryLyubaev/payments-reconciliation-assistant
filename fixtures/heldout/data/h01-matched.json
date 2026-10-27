@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "h01-matched",
+  "sources": [
+    {
+      "version": 1,
+      "batchId": "h01-matched-batch",
+      "receiptId": "h01-matched-receipt",
+      "currency": "AUD",
+      "basis": "exclusive",
+      "rateBps": 1000,
+      "subtotalMinor": "2010",
+      "lines": [
+        {
+          "id": "a",
+          "netMinor": "1005"
+        },
+        {
+          "id": "b",
+          "netMinor": "1005"
+        }
+      ],
+      "id": "h01-matched-pos",
+      "source": "pos",
+      "taxMinor": "201",
+      "grossMinor": "2211"
+    },
+    {
+      "version": 1,
+      "batchId": "h01-matched-batch",
+      "receiptId": "h01-matched-receipt",
+      "currency": "AUD",
+      "basis": "exclusive",
+      "rateBps": 1000,
+      "subtotalMinor": "2010",
+      "lines": [
+        {
+          "id": "a",
+          "netMinor": "1005"
+        },
+        {
+          "id": "b",
+          "netMinor": "1005"
+        }
+      ],
+      "id": "h01-matched-acct",
+      "source": "accounting",
+      "taxMinor": "201",
+      "grossMinor": "2211"
+    }
+  ],
+  "policies": [
+    {
+      "id": "h01-matched-p1",
+      "version": 1,
+      "batchId": "h01-matched-batch",
+      "receiptIds": [
+        "h01-matched-receipt"
+      ],
+      "source": "pos",
+      "rateBps": 1000,
+      "rounding": "per_item",
+      "text": "Fictional POS policy: round tax per item."
+    },
+    {
+      "id": "h01-matched-p2",
+      "version": 1,
+      "batchId": "h01-matched-batch",
+      "receiptIds": [
+        "h01-matched-receipt"
+      ],
+      "source": "accounting",
+      "rateBps": 1000,
+      "rounding": "per_receipt",
+      "text": "Fictional export policy: round tax after summing."
+    }
+  ]
+}

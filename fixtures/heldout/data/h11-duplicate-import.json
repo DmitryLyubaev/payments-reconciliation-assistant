@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "h11-duplicate-import",
+  "sources": [
+    {
+      "version": 1,
+      "batchId": "h11-duplicate-import-batch",
+      "receiptId": "h11-duplicate-import-receipt",
+      "currency": "AUD",
+      "basis": "exclusive",
+      "rateBps": 1000,
+      "subtotalMinor": "2010",
+      "lines": [
+        {
+          "id": "a",
+          "netMinor": "1005"
+        },
+        {
+          "id": "b",
+          "netMinor": "1005"
+        }
+      ],
+      "id": "h11-duplicate-import-pos",
+      "source": "pos",
+      "taxMinor": "202",
+      "grossMinor": "2212"
+    },
+    {
+      "version": 1,
+      "batchId": "h11-duplicate-import-batch",
+      "receiptId": "h11-duplicate-import-receipt",
+      "currency": "AUD",
+      "basis": "exclusive",
+      "rateBps": 1000,
+      "subtotalMinor": "2010",
+      "lines": [
+        {
+          "id": "a",
+          "netMinor": "1005"
+        },
+        {
+          "id": "b",
+          "netMinor": "1005"
+        }
+      ],
+      "id": "h11-duplicate-import-acct",
+      "source": "accounting",
+      "taxMinor": "201",
+      "grossMinor": "2211"
+    }
+  ],
+  "policies": [
+    {
+      "id": "h11-duplicate-import-p1",
+      "version": 1,
+      "batchId": "h11-duplicate-import-batch",
+      "receiptIds": [
+        "h11-duplicate-import-receipt"
+      ],
+      "source": "pos",
+      "rateBps": 1000,
+      "rounding": "per_item",
+      "text": "Fictional POS policy: round tax per item."
+    },
+    {
+      "id": "h11-duplicate-import-p2",
+      "version": 1,
+      "batchId": "h11-duplicate-import-batch",
+      "receiptIds": [
+        "h11-duplicate-import-receipt"
+      ],
+      "source": "accounting",
+      "rateBps": 1000,
+      "rounding": "per_receipt",
+      "text": "Fictional export policy: round tax after summing."
+    }
+  ]
+}

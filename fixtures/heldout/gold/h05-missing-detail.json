@@ -1,0 +1,31 @@
+{
+  "category": "insufficient_evidence",
+  "differenceMinor": "1",
+  "posTotalMinor": "2212",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "h05-missing-detail-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "h05-missing-detail-acct",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h05-missing-detail-p1",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h05-missing-detail-p2",
+      "version": 1
+    }
+  ],
+  "outcome": "open_unresolved",
+  "staleRequired": false,
+  "duplicateRequired": false
+}

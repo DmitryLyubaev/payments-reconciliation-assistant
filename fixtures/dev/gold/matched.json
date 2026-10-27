@@ -1,0 +1,31 @@
+{
+  "category": "matched",
+  "differenceMinor": "0",
+  "posTotalMinor": "2211",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "dev-matched-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "dev-matched-acct",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "dev-matched-p1",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "dev-matched-p2",
+      "version": 1
+    }
+  ],
+  "outcome": "matched",
+  "staleRequired": false,
+  "duplicateRequired": false
+}

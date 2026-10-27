@@ -1,0 +1,36 @@
+{
+  "category": "contradictory_evidence",
+  "differenceMinor": "1",
+  "posTotalMinor": "2212",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "h07-conflicting-policies-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "h07-conflicting-policies-acct",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h07-conflicting-policies-p1",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h07-conflicting-policies-p2",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h07-conflicting-policies-p3",
+      "version": 1
+    }
+  ],
+  "outcome": "open_unresolved",
+  "staleRequired": false,
+  "duplicateRequired": false
+}

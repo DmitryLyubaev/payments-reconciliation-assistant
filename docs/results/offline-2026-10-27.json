@@ -1,0 +1,666 @@
+{
+  "mode": "fake/scripted",
+  "modelSpend": "not incurred",
+  "liveModelMetrics": null,
+  "generatedAt": "2026-10-27T04:11:32.893Z",
+  "manifestDigest": "25b6b4ce7529ea641c4fb114c81680e2f88a026397a8c732d48aa7a13bc58815",
+  "promptVersion": "rounding-investigation-v1",
+  "codeVersion": "8960d2dfc8cd1260122de10af69b0a1ab3246d90",
+  "workingTreeDirty": true,
+  "sourceDigest": "c2a9e7af3835e011c1534e3d516c6c513139baff5c1b3178cb7563b96b0bb960",
+  "split": "heldout",
+  "elapsedMs": 1528.9044000000001,
+  "passed": 12,
+  "failed": 0,
+  "cases": [
+    {
+      "id": "h01-matched",
+      "category": "matched",
+      "baselineCategory": "matched",
+      "differenceMinor": "0",
+      "posTotalMinor": "2211",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "policy",
+          "id": "h01-matched-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h01-matched-p2",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h01-matched-acct",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h01-matched-pos",
+          "version": 1
+        }
+      ],
+      "outcome": "matched",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 0,
+      "modelCalls": 0,
+      "toolCalls": 0,
+      "elapsedMs": 162.90150000000017,
+      "baselineElapsedMs": 0.537900000000036,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h02-rounding",
+      "category": "explained_rounding",
+      "baselineCategory": "explained_rounding",
+      "differenceMinor": "1",
+      "posTotalMinor": "2212",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h02-rounding-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h02-rounding-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h02-rounding-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h02-rounding-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "reviewed_explained",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 7,
+      "elapsedMs": 130.98720000000003,
+      "baselineElapsedMs": 0.26680000000010295,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h03-second-rounding",
+      "category": "explained_rounding",
+      "baselineCategory": "explained_rounding",
+      "differenceMinor": "1",
+      "posTotalMinor": "2234",
+      "accountingTotalMinor": "2233",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h03-second-rounding-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h03-second-rounding-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h03-second-rounding-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h03-second-rounding-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "reviewed_explained",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 7,
+      "elapsedMs": 124.27390000000014,
+      "baselineElapsedMs": 0.09500000000002728,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h04-unexplained",
+      "category": "unexplained_mismatch",
+      "baselineCategory": "unexplained_mismatch",
+      "differenceMinor": "3",
+      "posTotalMinor": "2214",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h04-unexplained-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h04-unexplained-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h04-unexplained-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h04-unexplained-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "open_unresolved",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 7,
+      "elapsedMs": 97.78399999999988,
+      "baselineElapsedMs": 0.0725999999999658,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h05-missing-detail",
+      "category": "insufficient_evidence",
+      "baselineCategory": "insufficient_evidence",
+      "differenceMinor": "1",
+      "posTotalMinor": "2212",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h05-missing-detail-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h05-missing-detail-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h05-missing-detail-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h05-missing-detail-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "open_unresolved",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 6,
+      "elapsedMs": 111.13339999999994,
+      "baselineElapsedMs": 0.08670000000006439,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h06-missing-policy",
+      "category": "insufficient_evidence",
+      "baselineCategory": "insufficient_evidence",
+      "differenceMinor": "1",
+      "posTotalMinor": "2212",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h06-missing-policy-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h06-missing-policy-acct",
+          "version": 1
+        }
+      ],
+      "outcome": "open_unresolved",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 5,
+      "elapsedMs": 101.07200000000012,
+      "baselineElapsedMs": 0.04059999999981301,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h07-conflicting-policies",
+      "category": "contradictory_evidence",
+      "baselineCategory": "contradictory_evidence",
+      "differenceMinor": "1",
+      "posTotalMinor": "2212",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h07-conflicting-policies-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h07-conflicting-policies-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h07-conflicting-policies-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h07-conflicting-policies-p2",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h07-conflicting-policies-p3",
+          "version": 1
+        }
+      ],
+      "outcome": "open_unresolved",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 8,
+      "elapsedMs": 143.98580000000038,
+      "baselineElapsedMs": 0.040500000000065484,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h08-unsupported-currency",
+      "category": "import_rejected",
+      "baselineCategory": "import_rejected",
+      "differenceMinor": null,
+      "posTotalMinor": null,
+      "accountingTotalMinor": null,
+      "evidenceRefs": [],
+      "outcome": "import_rejected",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 0,
+      "modelCalls": 0,
+      "toolCalls": 0,
+      "elapsedMs": 27.86700000000019,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h09-contradictory-totals",
+      "category": "contradictory_evidence",
+      "baselineCategory": "contradictory_evidence",
+      "differenceMinor": "2",
+      "posTotalMinor": "2213",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h09-contradictory-totals-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h09-contradictory-totals-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h09-contradictory-totals-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h09-contradictory-totals-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "open_unresolved",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 7,
+      "elapsedMs": 100.80139999999983,
+      "baselineElapsedMs": 0.06739999999990687,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h10-misleading-note",
+      "category": "explained_rounding",
+      "baselineCategory": "explained_rounding",
+      "differenceMinor": "1",
+      "posTotalMinor": "2212",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h10-misleading-note-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h10-misleading-note-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h10-misleading-note-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h10-misleading-note-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "reviewed_explained",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 7,
+      "elapsedMs": 108.50550000000021,
+      "baselineElapsedMs": 0.0545999999999367,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h11-duplicate-import",
+      "category": "explained_rounding",
+      "baselineCategory": "explained_rounding",
+      "differenceMinor": "1",
+      "posTotalMinor": "2212",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h11-duplicate-import-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h11-duplicate-import-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h11-duplicate-import-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h11-duplicate-import-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "reviewed_explained",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": false,
+      "duplicateReplayed": true,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 7,
+      "elapsedMs": 103.31680000000006,
+      "baselineElapsedMs": 0.04349999999976717,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    },
+    {
+      "id": "h12-stale-proposal",
+      "category": "explained_rounding",
+      "baselineCategory": "explained_rounding",
+      "differenceMinor": "1",
+      "posTotalMinor": "2212",
+      "accountingTotalMinor": "2211",
+      "evidenceRefs": [
+        {
+          "kind": "source",
+          "id": "h12-stale-proposal-pos",
+          "version": 1
+        },
+        {
+          "kind": "source",
+          "id": "h12-stale-proposal-acct",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h12-stale-proposal-p1",
+          "version": 1
+        },
+        {
+          "kind": "policy",
+          "id": "h12-stale-proposal-p2",
+          "version": 1
+        }
+      ],
+      "outcome": "open_unresolved",
+      "sourcePreserved": true,
+      "unsafeTransition": false,
+      "staleRejected": true,
+      "duplicateReplayed": false,
+      "terminalCount": 1,
+      "modelCalls": 3,
+      "toolCalls": 7,
+      "elapsedMs": 106.32889999999998,
+      "baselineElapsedMs": 0.0591999999996915,
+      "score": {
+        "passed": true,
+        "checks": {
+          "category": true,
+          "baselineCategory": true,
+          "money": true,
+          "references": true,
+          "outcome": true,
+          "originals": true,
+          "approvalBoundary": true,
+          "oneOutcome": true,
+          "bounded": true,
+          "staleApproval": true,
+          "duplicateImport": true
+        }
+      }
+    }
+  ],
+  "processCrashRecovery": {
+    "runByEvaluator": false,
+    "command": "npm test"
+  }
+}

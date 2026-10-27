@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "frozenOn": "2026-10-27",
+  "cases": [
+    {
+      "id": "dev-rounding",
+      "split": "dev",
+      "scenario": "normal",
+      "data": "dev/data/rounding.json",
+      "gold": "dev/gold/rounding.json",
+      "scripts": "dev/scripts/rounding.json"
+    },
+    {
+      "id": "dev-missing-policy",
+      "split": "dev",
+      "scenario": "normal",
+      "data": "dev/data/missing-policy.json",
+      "gold": "dev/gold/missing-policy.json",
+      "scripts": "dev/scripts/missing-policy.json"
+    },
+    {
+      "id": "dev-unexplained",
+      "split": "dev",
+      "scenario": "normal",
+      "data": "dev/data/unexplained.json",
+      "gold": "dev/gold/unexplained.json",
+      "scripts": "dev/scripts/unexplained.json"
+    },
+    {
+      "id": "dev-matched",
+      "split": "dev",
+      "scenario": "normal",
+      "data": "dev/data/matched.json",
+      "gold": "dev/gold/matched.json",
+      "scripts": "dev/scripts/matched.json"
+    },
+    {
+      "id": "h01-matched",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h01-matched.json",
+      "gold": "heldout/gold/h01-matched.json",
+      "scripts": "heldout/scripts/h01-matched.json"
+    },
+    {
+      "id": "h02-rounding",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h02-rounding.json",
+      "gold": "heldout/gold/h02-rounding.json",
+      "scripts": "heldout/scripts/h02-rounding.json"
+    },
+    {
+      "id": "h03-second-rounding",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h03-second-rounding.json",
+      "gold": "heldout/gold/h03-second-rounding.json",
+      "scripts": "heldout/scripts/h03-second-rounding.json"
+    },
+    {
+      "id": "h04-unexplained",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h04-unexplained.json",
+      "gold": "heldout/gold/h04-unexplained.json",
+      "scripts": "heldout/scripts/h04-unexplained.json"
+    },
+    {
+      "id": "h05-missing-detail",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h05-missing-detail.json",
+      "gold": "heldout/gold/h05-missing-detail.json",
+      "scripts": "heldout/scripts/h05-missing-detail.json"
+    },
+    {
+      "id": "h06-missing-policy",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h06-missing-policy.json",
+      "gold": "heldout/gold/h06-missing-policy.json",
+      "scripts": "heldout/scripts/h06-missing-policy.json"
+    },
+    {
+      "id": "h07-conflicting-policies",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h07-conflicting-policies.json",
+      "gold": "heldout/gold/h07-conflicting-policies.json",
+      "scripts": "heldout/scripts/h07-conflicting-policies.json"
+    },
+    {
+      "id": "h08-unsupported-currency",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h08-unsupported-currency.json",
+      "gold": "heldout/gold/h08-unsupported-currency.json",
+      "scripts": "heldout/scripts/h08-unsupported-currency.json"
+    },
+    {
+      "id": "h09-contradictory-totals",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h09-contradictory-totals.json",
+      "gold": "heldout/gold/h09-contradictory-totals.json",
+      "scripts": "heldout/scripts/h09-contradictory-totals.json"
+    },
+    {
+      "id": "h10-misleading-note",
+      "split": "heldout",
+      "scenario": "normal",
+      "data": "heldout/data/h10-misleading-note.json",
+      "gold": "heldout/gold/h10-misleading-note.json",
+      "scripts": "heldout/scripts/h10-misleading-note.json"
+    },
+    {
+      "id": "h11-duplicate-import",
+      "split": "heldout",
+      "scenario": "duplicate_import",
+      "data": "heldout/data/h11-duplicate-import.json",
+      "gold": "heldout/gold/h11-duplicate-import.json",
+      "scripts": "heldout/scripts/h11-duplicate-import.json"
+    },
+    {
+      "id": "h12-stale-proposal",
+      "split": "heldout",
+      "scenario": "stale_proposal",
+      "data": "heldout/data/h12-stale-proposal.json",
+      "gold": "heldout/gold/h12-stale-proposal.json",
+      "scripts": "heldout/scripts/h12-stale-proposal.json"
+    }
+  ],
+  "files": {
+    "dev/data/rounding.json": "6273b4c833ff375a349cda2ffa69b2c2cf1d518185fdebf310940abd39c637ff",
+    "dev/gold/rounding.json": "4b39572708683253d6828c28529194471608aaec5a360f576ba23addf322c928",
+    "dev/scripts/rounding.json": "1ed1352e7db0cd5e06c05616093ef4e7b5c7972d4fbfc354464de57ace58d735",
+    "dev/data/missing-policy.json": "af4d9049a2adee677b676cc49a0471887958eee72326d2feb1abb63dd31c7549",
+    "dev/gold/missing-policy.json": "1c24e64175261393d599b4a4943fc26c805c209eae2eae1ec2cda3a1a9a86e95",
+    "dev/scripts/missing-policy.json": "91aac741bd0bec19a8f9b3cc7791e23135550d1fa90873145f3845cc3e3e3f73",
+    "dev/data/unexplained.json": "bd50adc666d6ae6f31f19f43050c9fef0fab65bf3814f4d638e2ee24d3fac5cb",
+    "dev/gold/unexplained.json": "add54cc370620704f6f8bf0b6478a1d8986f0c81b6630d7ed1e06bf65e6b0f64",
+    "dev/scripts/unexplained.json": "a0602eda0a4c507f9327a7463bbdada17e9525d345772b6a114e94b889b8a283",
+    "dev/data/matched.json": "62b6fce81a49227a2c32ba846166883b72adeae16b83c7d0871cfe2ec572791b",
+    "dev/gold/matched.json": "d058994820c1e759c2800f1d5ecfa2b8befcdee50846112afdc6225f0e6f8b12",
+    "dev/scripts/matched.json": "81516ee23308d46cc949445a98d430e8e1c3e0cb2d3c35e88516393aba914148",
+    "heldout/data/h01-matched.json": "5038efa0bf34630d1dbad42d95776e987bd181da2eb500bdc9d04c59cd8c5f39",
+    "heldout/gold/h01-matched.json": "e722bbcf0fc3a07a9a90fd6f9505fea9442283b57b911b3d9dec3ac0c3ab6c14",
+    "heldout/scripts/h01-matched.json": "7d85f1d333a1b2302b1fddc8783005979c063409608d62539c7659d6d02379de",
+    "heldout/data/h02-rounding.json": "43ec2d3272879e6ecd69cbc6fb5280ac8fb36e6c45b51a67b9789df1598566d1",
+    "heldout/gold/h02-rounding.json": "2d921818165835e4a0ccc4730c3d6731b1b3222ad3f49e9e12baf7a3909549fa",
+    "heldout/scripts/h02-rounding.json": "c7d51948a50b6dba17f6567cb218c4475275060e7978c310c64d8654251abd47",
+    "heldout/data/h03-second-rounding.json": "6c37abedb88e73c20c7cda9c2dbbaac8587206a89a195965ad3ca963ae1d9d09",
+    "heldout/gold/h03-second-rounding.json": "842f158b5df817df05c349a9e754378c77ca7c5769a9bfc284a2ec699d2b6344",
+    "heldout/scripts/h03-second-rounding.json": "c136d08984d7ae010159b54a2128b00d0062f808968d18d852512fb92d660dd3",
+    "heldout/data/h04-unexplained.json": "2f02cccd1038f115c6325ec3ce39d86f7f0759b765944fd81df335cc09f914ad",
+    "heldout/gold/h04-unexplained.json": "3af60f2f520c3bba6fb0a3e6be088fc024da484469a164923d8a20c1132cd90b",
+    "heldout/scripts/h04-unexplained.json": "2da818a5c27d56315ac1f42d6ca8470372983d367102a18ed1107b7bb3e2da72",
+    "heldout/data/h05-missing-detail.json": "970c368e8c34dcfa7373496ad175a6cc81daa832a2b1b66dc2f2feac9521283b",
+    "heldout/gold/h05-missing-detail.json": "bc049bd37d6dd248221ea8656e0408c44b781817a081c702bdeb16bfd7557a31",
+    "heldout/scripts/h05-missing-detail.json": "fb8779b60ea3312ba1f9738f74ab8f182f3b5f364bfae9d87d93100a6b2bcfdc",
+    "heldout/data/h06-missing-policy.json": "1cb57bdd947a7d991d09de27bd7e355390cd57a61df1d17c406f80b9bb2ad6fb",
+    "heldout/gold/h06-missing-policy.json": "60b295a25f636a0f834fad80cdcf5ef6161419eed67ef3aa717ffefdb270fb46",
+    "heldout/scripts/h06-missing-policy.json": "453f4f6dc4b7fa40fa3566ff899b29db345ae3e1bf7fdddd116527eb454c67b3",
+    "heldout/data/h07-conflicting-policies.json": "76ad4681a95ceb0f46c813511ca90bbfd399984f41e67be9525e200d09ea8ba6",
+    "heldout/gold/h07-conflicting-policies.json": "3cc884f0f162af876194e732b9b062bb3ed12c788b188c0777557ece5e571a7d",
+    "heldout/scripts/h07-conflicting-policies.json": "75fa41855d09f793cdf4c4bf003989d5c64e8be45ad2420b0c9b88dafed43964",
+    "heldout/data/h08-unsupported-currency.json": "76bb30fd4d683b79bd66acf602ae6f616870408b97c11a998994ba963bd6aec0",
+    "heldout/gold/h08-unsupported-currency.json": "eed476dce69768fb7bc640176ca9932c6fdaf505e1a52df44bce92601babe79e",
+    "heldout/scripts/h08-unsupported-currency.json": "dc17917e73655e1ea68e8be0d7c92306d7aafa829492f78fb9d6c6a3249b490b",
+    "heldout/data/h09-contradictory-totals.json": "e6897beb9e668c337156a84d7a9b51e90d3e30ff4b925f1adb27d9d0d6ee9d51",
+    "heldout/gold/h09-contradictory-totals.json": "da5b158287fa07955349711d93ad635958ef5d9f6007f44a88bc2cfc4d929dd8",
+    "heldout/scripts/h09-contradictory-totals.json": "94e6730f46b46127789a25d3b551b1b0054fc5807106ef999fb2a7f773be7f9d",
+    "heldout/data/h10-misleading-note.json": "d34744a222f556f875ada572198132d2b2fd33c3417851e4ac545d29665fc6ee",
+    "heldout/gold/h10-misleading-note.json": "87b3246ebd60b6c4c7809412937287370654cea583cb709fe347d39eb17f94ed",
+    "heldout/scripts/h10-misleading-note.json": "0d9849b345473037085186ca5c3c4704c68a3199350c5604b48bb9fb402dfab4",
+    "heldout/data/h11-duplicate-import.json": "5703c1b421d0e68469621e2c834c69ec38b31ed444276aaa365da7534dade97e",
+    "heldout/gold/h11-duplicate-import.json": "285cf13eff7224dbb5bf4af9f78fee64573ae892276afb76004fd37c79625f13",
+    "heldout/scripts/h11-duplicate-import.json": "6b537a5c66f45ccaae47058918b2b635c2494d75600095379a07117460f686a4",
+    "heldout/data/h12-stale-proposal.json": "a27febeda757e1d53d19590ebcaeacb6d909a66ce44f9f0acf0662e987706c8b",
+    "heldout/gold/h12-stale-proposal.json": "d0bfdc202ee1b4a80cd1faae8b46818b8b2465d693928d546bb64148670a42fc",
+    "heldout/scripts/h12-stale-proposal.json": "efe11a6dfdeca598b9c9bea4f501d52a359f875d8d04c3d7114aa7b3068f73b7"
+  }
+}

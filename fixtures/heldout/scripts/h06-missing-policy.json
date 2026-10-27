@@ -1,0 +1,88 @@
+{
+  "id": "h06-missing-policy-script",
+  "version": "1",
+  "steps": [
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "list",
+          "name": "listEvidence",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "read0",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h06-missing-policy-pos",
+            "version": 1
+          }
+        },
+        {
+          "id": "read1",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h06-missing-policy-acct",
+            "version": 1
+          }
+        },
+        {
+          "id": "calc0",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h06-missing-policy-pos",
+              "version": 1
+            },
+            "rounding": "per_item"
+          }
+        },
+        {
+          "id": "calc1",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h06-missing-policy-acct",
+              "version": 1
+            },
+            "rounding": "per_receipt"
+          }
+        }
+      ]
+    },
+    {
+      "type": "proposal",
+      "proposal": {
+        "category": "insufficient_evidence",
+        "differenceMinor": "1",
+        "evidenceRefs": [
+          {
+            "kind": "source",
+            "id": "h06-missing-policy-pos",
+            "version": 1
+          },
+          {
+            "kind": "source",
+            "id": "h06-missing-policy-acct",
+            "version": 1
+          }
+        ],
+        "calculationIds": [
+          "h06-missing-policy-pos-v1-per_item",
+          "h06-missing-policy-acct-v1-per_receipt"
+        ],
+        "explanation": "Required calculation evidence is missing. The rounding hypothesis cannot be confirmed.",
+        "nextStep": "Keep the exception open and investigate the evidence."
+      }
+    }
+  ]
+}

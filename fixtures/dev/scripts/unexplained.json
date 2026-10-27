@@ -1,0 +1,116 @@
+{
+  "id": "dev-unexplained-script",
+  "version": "1",
+  "steps": [
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "list",
+          "name": "listEvidence",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "read0",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "dev-unexplained-pos",
+            "version": 1
+          }
+        },
+        {
+          "id": "read1",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "dev-unexplained-acct",
+            "version": 1
+          }
+        },
+        {
+          "id": "read2",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "dev-unexplained-p1",
+            "version": 1
+          }
+        },
+        {
+          "id": "read3",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "dev-unexplained-p2",
+            "version": 1
+          }
+        },
+        {
+          "id": "calc0",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "dev-unexplained-pos",
+              "version": 1
+            },
+            "rounding": "per_item"
+          }
+        },
+        {
+          "id": "calc1",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "dev-unexplained-acct",
+              "version": 1
+            },
+            "rounding": "per_receipt"
+          }
+        }
+      ]
+    },
+    {
+      "type": "proposal",
+      "proposal": {
+        "category": "unexplained_mismatch",
+        "differenceMinor": "3",
+        "evidenceRefs": [
+          {
+            "kind": "source",
+            "id": "dev-unexplained-pos",
+            "version": 1
+          },
+          {
+            "kind": "source",
+            "id": "dev-unexplained-acct",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "dev-unexplained-p1",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "dev-unexplained-p2",
+            "version": 1
+          }
+        ],
+        "calculationIds": [
+          "dev-unexplained-pos-v1-per_item",
+          "dev-unexplained-acct-v1-per_receipt"
+        ],
+        "explanation": "The complete evidence does not support a rounding explanation for the remaining difference.",
+        "nextStep": "Keep the exception open and investigate the evidence."
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "category": "insufficient_evidence",
+  "differenceMinor": "1",
+  "posTotalMinor": "2212",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "h06-missing-policy-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "h06-missing-policy-acct",
+      "version": 1
+    }
+  ],
+  "outcome": "open_unresolved",
+  "staleRequired": false,
+  "duplicateRequired": false
+}

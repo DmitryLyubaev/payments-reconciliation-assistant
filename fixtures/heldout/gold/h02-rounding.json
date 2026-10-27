@@ -1,0 +1,31 @@
+{
+  "category": "explained_rounding",
+  "differenceMinor": "1",
+  "posTotalMinor": "2212",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "h02-rounding-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "h02-rounding-acct",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h02-rounding-p1",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h02-rounding-p2",
+      "version": 1
+    }
+  ],
+  "outcome": "reviewed_explained",
+  "staleRequired": false,
+  "duplicateRequired": false
+}

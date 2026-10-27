@@ -1,8 +1,66 @@
-import { parseArgs } from 'node:util';import { readFileSync,readdirSync } from 'node:fs';import { fileURLToPath } from 'node:url';import { join,resolve,basename } from 'node:path';
-import { openStore } from './storage/store.js';import { parseFixture } from './domain/contracts.js';import { createWorkflow } from './workflow/graph.js';import { applyIntent } from './workflow/decisions.js';import { startRunner } from './workflow/runner.js';import { createServer,type DemoFixture } from './http/server.js';import { requireOfflineMode } from './investigation/fake-model.js';import type { FakeScript } from './investigation/contracts.js';
-const {values}=parseArgs({options:{port:{type:'string',default:'4313'},'data-dir':{type:'string',default:'data'},mode:{type:'string',default:'fake'}}});requireOfflineMode(values.mode);const port=Number(values.port);if(!Number.isInteger(port)||port<0||port>65535)throw new Error('INVALID_PORT');
-const root=fileURLToPath(new URL('../',import.meta.url));const names:Record<string,string>={rounding:'GST rounding','missing-policy':'Missing evidence',unexplained:'Unexplained mismatch',matched:'Exact match'};
-const fixtures:DemoFixture[]=readdirSync(join(root,'fixtures/dev/data')).filter(f=>f.endsWith('.json')).map(file=>{const slug=basename(file,'.json');const data=parseFixture(JSON.parse(readFileSync(join(root,'fixtures/dev/data',file),'utf8')));return {id:data.id,label:names[slug]??slug,data,script:JSON.parse(readFileSync(join(root,'fixtures/dev/scripts',file),'utf8')) as FakeScript};});
-const store=openStore(resolve(values['data-dir']));const workflow=createWorkflow({store,applyIntent:(id,expected)=>applyIntent(store,id,undefined,expected)});const runner=startRunner({store,workflow});await runner.wake();const server=await createServer({store,workflow,runner,fixtures,port});console.log(`Payments reconciliation: ${server.origin} (fake/scripted mode)`);
-let stopping=false;async function stop(){if(stopping)return;stopping=true;await server.close();await runner.close();await workflow.close();store.close();process.exitCode=0;}
-process.on('SIGINT',()=>void stop());process.on('SIGTERM',()=>void stop());
+import { parseArgs } from 'node:util';
+import { readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { join, resolve, basename } from 'node:path';
+import { openStore } from './storage/store.js';
+import { parseFixture } from './domain/contracts.js';
+import { createWorkflow } from './workflow/graph.js';
+import { applyIntent } from './workflow/decisions.js';
+import { startRunner } from './workflow/runner.js';
+import { createServer, type DemoFixture } from './http/server.js';
+import { requireOfflineMode } from './investigation/fake-model.js';
+import type { FakeScript } from './investigation/contracts.js';
+const { values } = parseArgs({
+  options: {
+    port: { type: 'string', default: '4313' },
+    'data-dir': { type: 'string', default: 'data' },
+    mode: { type: 'string', default: 'fake' },
+  },
+});
+requireOfflineMode(values.mode);
+const port = Number(values.port);
+if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('INVALID_PORT');
+const root = fileURLToPath(new URL('../', import.meta.url));
+const names: Record<string, string> = {
+  rounding: 'GST rounding',
+  'missing-policy': 'Missing evidence',
+  unexplained: 'Unexplained mismatch',
+  matched: 'Exact match',
+};
+const fixtures: DemoFixture[] = readdirSync(join(root, 'fixtures/dev/data'))
+  .filter((f) => f.endsWith('.json'))
+  .map((file) => {
+    const slug = basename(file, '.json');
+    const data = parseFixture(
+      JSON.parse(readFileSync(join(root, 'fixtures/dev/data', file), 'utf8')),
+    );
+    return {
+      id: data.id,
+      label: names[slug] ?? slug,
+      data,
+      script: JSON.parse(
+        readFileSync(join(root, 'fixtures/dev/scripts', file), 'utf8'),
+      ) as FakeScript,
+    };
+  });
+const store = openStore(resolve(values['data-dir']));
+const workflow = createWorkflow({
+  store,
+  applyIntent: (id, expected) => applyIntent(store, id, undefined, expected),
+});
+const runner = startRunner({ store, workflow });
+await runner.wake();
+const server = await createServer({ store, workflow, runner, fixtures, port });
+console.log(`Payments reconciliation: ${server.origin} (fake/scripted mode)`);
+let stopping = false;
+async function stop() {
+  if (stopping) return;
+  stopping = true;
+  await server.close();
+  await runner.close();
+  await workflow.close();
+  store.close();
+  process.exitCode = 0;
+}
+process.on('SIGINT', () => void stop());
+process.on('SIGTERM', () => void stop());

@@ -1,0 +1,103 @@
+{
+  "id": "h05-missing-detail-script",
+  "version": "1",
+  "steps": [
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "list",
+          "name": "listEvidence",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "type": "tools",
+      "calls": [
+        {
+          "id": "read0",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h05-missing-detail-pos",
+            "version": 1
+          }
+        },
+        {
+          "id": "read1",
+          "name": "getEvidence",
+          "args": {
+            "kind": "source",
+            "id": "h05-missing-detail-acct",
+            "version": 1
+          }
+        },
+        {
+          "id": "read2",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h05-missing-detail-p1",
+            "version": 1
+          }
+        },
+        {
+          "id": "read3",
+          "name": "getEvidence",
+          "args": {
+            "kind": "policy",
+            "id": "h05-missing-detail-p2",
+            "version": 1
+          }
+        },
+        {
+          "id": "calc0",
+          "name": "compareRounding",
+          "args": {
+            "sourceRef": {
+              "kind": "source",
+              "id": "h05-missing-detail-acct",
+              "version": 1
+            },
+            "rounding": "per_receipt"
+          }
+        }
+      ]
+    },
+    {
+      "type": "proposal",
+      "proposal": {
+        "category": "insufficient_evidence",
+        "differenceMinor": "1",
+        "evidenceRefs": [
+          {
+            "kind": "source",
+            "id": "h05-missing-detail-pos",
+            "version": 1
+          },
+          {
+            "kind": "source",
+            "id": "h05-missing-detail-acct",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h05-missing-detail-p1",
+            "version": 1
+          },
+          {
+            "kind": "policy",
+            "id": "h05-missing-detail-p2",
+            "version": 1
+          }
+        ],
+        "calculationIds": [
+          "h05-missing-detail-acct-v1-per_receipt"
+        ],
+        "explanation": "Required calculation evidence is missing. The rounding hypothesis cannot be confirmed.",
+        "nextStep": "Keep the exception open and investigate the evidence."
+      }
+    }
+  ]
+}

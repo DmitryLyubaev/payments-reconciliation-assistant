@@ -1,0 +1,31 @@
+{
+  "category": "explained_rounding",
+  "differenceMinor": "1",
+  "posTotalMinor": "2212",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "h12-stale-proposal-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "h12-stale-proposal-acct",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h12-stale-proposal-p1",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h12-stale-proposal-p2",
+      "version": 1
+    }
+  ],
+  "outcome": "open_unresolved",
+  "staleRequired": true,
+  "duplicateRequired": false
+}

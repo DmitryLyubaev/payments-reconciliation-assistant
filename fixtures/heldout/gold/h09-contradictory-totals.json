@@ -1,0 +1,31 @@
+{
+  "category": "contradictory_evidence",
+  "differenceMinor": "2",
+  "posTotalMinor": "2213",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "h09-contradictory-totals-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "h09-contradictory-totals-acct",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h09-contradictory-totals-p1",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h09-contradictory-totals-p2",
+      "version": 1
+    }
+  ],
+  "outcome": "open_unresolved",
+  "staleRequired": false,
+  "duplicateRequired": false
+}

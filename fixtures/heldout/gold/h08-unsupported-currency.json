@@ -1,0 +1,10 @@
+{
+  "category": "import_rejected",
+  "differenceMinor": null,
+  "posTotalMinor": null,
+  "accountingTotalMinor": null,
+  "requiredRefs": [],
+  "outcome": "import_rejected",
+  "staleRequired": false,
+  "duplicateRequired": false
+}

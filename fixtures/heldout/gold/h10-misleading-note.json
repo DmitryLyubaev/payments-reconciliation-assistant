@@ -1,0 +1,31 @@
+{
+  "category": "explained_rounding",
+  "differenceMinor": "1",
+  "posTotalMinor": "2212",
+  "accountingTotalMinor": "2211",
+  "requiredRefs": [
+    {
+      "kind": "source",
+      "id": "h10-misleading-note-pos",
+      "version": 1
+    },
+    {
+      "kind": "source",
+      "id": "h10-misleading-note-acct",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h10-misleading-note-p1",
+      "version": 1
+    },
+    {
+      "kind": "policy",
+      "id": "h10-misleading-note-p2",
+      "version": 1
+    }
+  ],
+  "outcome": "reviewed_explained",
+  "staleRequired": false,
+  "duplicateRequired": false
+}
