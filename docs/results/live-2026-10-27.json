@@ -2184,5 +2184,35 @@
       "modelCategoryCorrect": true,
       "modelMoneyCorrect": true
     }
-  ]
+  ],
+  "postStudyBillingReconciliation": {
+    "basis": "Owner billing-balance evidence with confirmation of no added or refunded credit; private audit retained",
+    "previousHoldUsd": "2.040960000",
+    "maximumUnexplainedDebitUsd": "0.008350000",
+    "retainedHoldUsd": "0.010000000",
+    "usageReceiptStillUnknown": true,
+    "applicationCapUsd": "5.000000000",
+    "ledgerReset": false
+  },
+  "postStudyBrowserDemo": {
+    "codeVersion": "191b57279929619bbd04d970793d4a0b038d0b3d",
+    "realClaudeBrowserDemo": true,
+    "sameProposalAfterRestart": true,
+    "sameSnapshotAfterRestart": true,
+    "rotatedSessionToken": true,
+    "providerCallsBeforeAndAfterRestart": 117,
+    "demoProviderCalls": 4,
+    "outcomes": 1,
+    "terminalEvents": 1,
+    "outcome": "reviewed_explained",
+    "originalGrossMinor": [
+      "2211",
+      "2212"
+    ],
+    "globalProviderCalls": 117,
+    "demoMeasuredChargeUsd": "0.033134000",
+    "allMeasuredChargeUsd": "0.954784000",
+    "remainingUncertainHoldUsd": "0.010000000",
+    "currentCommittedUpperBoundUsd": "0.964784000"
+  }
 }

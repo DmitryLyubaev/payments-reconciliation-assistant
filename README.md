@@ -6,9 +6,9 @@ A small TypeScript and LangGraph demonstration that investigates a synthetic rou
 
 An additional fake/scripted mode keeps automated tests reproducible and ordinary CI free of paid calls. No AWS deployment or production use is claimed.
 
-![The local reviewer interface in scripted regression mode, with an accepted explanation and unchanged source totals](docs/images/review.png)
+![A real Claude Sonnet 5.5 proposal awaiting review, with unchanged source totals and evidence references](docs/images/review-live.png)
 
-The screenshot shows scripted regression mode. Live mode displays the Claude model ID, and saved proposals identify the model that produced them.
+The screenshot is from a real Claude browser run. Its saved proposal survived a server restart without another model call, then browser approval recorded one outcome with both source totals unchanged. Runtime and saved-proposal model IDs are visible.
 
 On 27 October 2026, the live study passed **36 of 36 case runs** using 108 Claude calls, with **USD 0.888652** in reported token charges. The rules-only baseline also matched every category. These results describe a small synthetic sample; see the [full report](docs/live-report.md) for failures, budget accounting and evidence limits.
 

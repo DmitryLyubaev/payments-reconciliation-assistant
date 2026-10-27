@@ -22,3 +22,5 @@ Choose **Missing evidence** to see an unresolved case with no acceptance action.
 Automated cross-process checks run under `npm test`. They terminate and relaunch Node at four boundaries: after intent commit, before outcome commit, after outcome commit but before the graph checkpoint, and after the checkpoint but before the intent is marked consumed.
 
 The runtime badge and each proposal identify their model. Scripted restart tests prove local workflow persistence; the separate dated live evaluation measures the actual Claude path on a small synthetic sample.
+
+This sequence was also executed through a real Claude browser session on 27 October 2026 after the HTTP integration fixes: four provider calls, USD 0.033134 in reported token charges, the same proposal/snapshot across restart, no inference on resume, and one approved outcome with unchanged source totals. The README screenshot shows that actual proposal before approval.

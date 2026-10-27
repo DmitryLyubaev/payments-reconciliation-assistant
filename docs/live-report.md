@@ -35,7 +35,15 @@ Development used the rounding fixture. Its first generation request was rejected
 
 The rejected request's full maximum reservation remains in the budget ledger. It is a conservative hold, not a claim that the provider charged USD 2.040960. Since its usage was not captured, the exact aggregate invoice charge is not asserted. The study itself has valid usage for every one of its 108 calls and its USD 0.888652 token charge is independently calculable from the totals above.
 
-The retained reservation leaves USD 2.037390 of ledger headroom, slightly less than a new request's full conservative maximum of USD 2.040960. Consequently this particular ledger now stops further paid calls even though measured token charges are below USD 1. It was not reset to continue. Existing saved proposals can still be reviewed; further paid work needs billing reconciliation or a separately authorized budget change.
+At study completion, the retained reservation left USD 2.037390 of ledger headroom, slightly less than a new request's full conservative maximum of USD 2.040960. The ledger therefore stopped new paid calls even though measured token charges were below USD 1. It was not reset to continue.
+
+## Subsequent billing reconciliation and browser demonstration
+
+The owner subsequently supplied billing-balance evidence and confirmed that no credit had been added or refunded. Allowing for cent rounding, the maximum unexplained debit was USD 0.008350. An audited reconciliation narrowed the uncertain hold to USD 0.010000 rather than treating it as zero or inventing a usage receipt. The original ledger backup and reconciliation evidence remain private. The application cap stayed at USD 5; no ledger was deleted or replenished.
+
+With headroom restored by that evidence, a separate real browser run exercised the repaired HTTP path at code `191b572`. Claude produced the rounding proposal in four calls, costing USD 0.033134 in reported token charges. The browser displayed the actual model, evidence and AUD 22.12/22.11 source totals. After stopping and restarting the server, the same proposal and snapshot returned with a rotated session token and no additional model calls. Browser approval produced one outcome and one terminal event; original amounts remained unchanged.
+
+Combined measured token charges including that browser run were USD 0.954784, plus the remaining USD 0.010000 uncertain hold, giving a conservative committed upper bound of USD 0.964784. The missing receipt remains marked unknown, and exact aggregate invoice charges are not asserted. This additional browser observation is separate from the 36-case study above. Its application database and signed provider blocks remain locally available; they do not replace the study's deleted per-case transcripts.
 
 ## What was observed
 
