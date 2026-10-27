@@ -23,8 +23,9 @@ export type DecisionRequest = {
   decision: 'accept' | 'reject' | 'acknowledge';
 };
 export type ToolCall = { id: string; name: string; args: Record<string, unknown> };
-export type ModelReply =
-  { type: 'tools'; calls: ToolCall[] } | { type: 'proposal'; proposal: unknown };
+export type ModelReply = (
+  { type: 'tools'; calls: ToolCall[] } | { type: 'proposal'; proposal: unknown }
+) & { providerContent?: unknown[] };
 export type ModelInput = { threadId: string; turn: number; messages: unknown[] };
 export interface ModelAdapter {
   next(input: ModelInput, signal: AbortSignal): Promise<ModelReply>;
@@ -51,5 +52,7 @@ export type InvestigationDeps = {
   analysis: Analysis;
   tools: EvidenceTools;
   model: ModelAdapter;
+  modelVersion?: string;
+  promptVersion?: string;
   now?: () => number;
 };

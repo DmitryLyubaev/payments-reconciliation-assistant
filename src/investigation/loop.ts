@@ -7,6 +7,7 @@ import { SYSTEM_PROMPT, PROMPT_VERSION } from './prompt.js';
 const replySchema = z.discriminatedUnion('type', [
   z.strictObject({
     type: z.literal('tools'),
+    providerContent: z.array(z.unknown()).optional(),
     calls: z
       .array(
         z.strictObject({
@@ -17,12 +18,17 @@ const replySchema = z.discriminatedUnion('type', [
       )
       .max(100),
   }),
-  z.strictObject({ type: z.literal('proposal'), proposal: z.record(z.string(), z.unknown()) }),
+  z.strictObject({
+    type: z.literal('proposal'),
+    proposal: z.record(z.string(), z.unknown()),
+    providerContent: z.array(z.unknown()).optional(),
+  }),
 ]);
 export function initialInvestigationState(
   threadId: string,
   snapshot: Snapshot,
   now = Date.now(),
+  systemPrompt = SYSTEM_PROMPT,
 ): InvestigationState {
   return {
     threadId,
@@ -32,7 +38,7 @@ export function initialInvestigationState(
     retriesRemaining: 1,
     deadline: now + 60000,
     messages: [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: systemPrompt },
       { role: 'user', batchId: snapshot.batchId, receiptId: snapshot.receiptId },
     ],
   };
@@ -109,8 +115,8 @@ export async function stepInvestigation(
           id: `proposal_${state.threadId}`,
           version: 1,
           snapshotDigest: state.snapshotDigest,
-          modelVersion: 'fake-scripted-v1',
-          promptVersion: PROMPT_VERSION,
+          modelVersion: deps.modelVersion ?? 'fake-scripted-v1',
+          promptVersion: deps.promptVersion ?? PROMPT_VERSION,
         },
         deps.snapshot,
         deps.analysis,
