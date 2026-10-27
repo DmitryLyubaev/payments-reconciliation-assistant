@@ -16,12 +16,12 @@ Each case is scored on the system category, baseline category, hand-derived amou
 
 Reports contain per-case checks and failures, scripted adapter attempts, tool counts, measured elapsed time, code/source/prompt/fixture versions and dirty-tree status. Model spend is `not incurred`; live model metrics are `null`. Scripted replies intentionally encode the case exercise. Their success is not an estimate of LLM accuracy, usefulness or injection resistance. Process-crash results are obtained separately with `npm test`, not inferred from evaluator output.
 
-## Later real-model milestone
+## Real-model milestone
 
-Choose one provider/model and an explicit spend cap before implementing and activating its adapter. Ordinary startup and CI stay offline. Freeze the prompt/model configuration and run twelve cases three times, bypassing model calls for exact matches and invalid imports.
+The selected provider/model is Anthropic Claude Sonnet 5.5 with a USD 5 total application cap. Ordinary startup and CI stay offline. The live runner uses the same case observer/scorer and rules baseline, bypassing model calls for exact matches and invalid imports. Prompt, tool-schema/settings digest, source identity and fixture manifest are recorded. The dated live report covers the frozen configuration and repeated observations.
 
 The proposed acceptance target is at least 90% correct system categories, all required references on accepted explanations, and zero observed unsafe transitions or fabricated monetary results. Record every call/retry, actual token usage, dated prices, latency, sample size and failure. Small samples with zero observed failures do not establish general safety.
 
 The owner can apply a documented grounding/usefulness rubric, but that is not independent reviewer agreement. Tune using development cases. If a held-out failure drives a change, retain the original results and describe subsequent reuse as regression testing. Compare with the rules-only baseline and explicitly report if the agent offers no demonstrated benefit.
 
-No paid real-model evaluation, production observation, independent human rubric study or AWS operation has occurred in this milestone.
+The original offline report remains a historical scripted result. The [live report](live-report.md) records the subsequent paid study. No production observation, independent human rubric study or AWS operation is established. Evaluation approvals are automated harness actions, rather than observations of a human reviewer using the product.

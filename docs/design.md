@@ -32,7 +32,9 @@ The graph exposes only `listEvidence`, `getEvidence` and `compareRounding`. Call
 
 One investigation permits six model attempts, eight tool calls, 60 seconds and one transient retry inside those bounds. A hung adapter is aborted at the remaining deadline. A crash with an uncheckpointed started attempt leaves an explicit interrupted failure rather than silently repeating a potentially billable call.
 
-The present adapter reads an authored script. It is a test double, not an LLM. Proposed structured amounts and references are checked against authoritative arithmetic. Structural validation cannot prove that every sentence from a future real model is grounded; that requires the separate live evaluation.
+The default test adapter reads an authored script. Explicit Claude mode uses the Anthropic Messages API with the same scoped tools and a final submitProposal function. Signed assistant blocks are preserved in append-only history. Model, prompt and request-schema/settings identity are persisted; live investigations cannot reuse scripted proposals. Proposed structured amounts and references are checked against authoritative arithmetic. Structural validation cannot prove that every narrative sentence is grounded; the dated live evaluation records the observed model behavior and its limits.
+
+A separate persistent SQLite ledger reserves each paid call before transport at the full context/output maximum under the dated configured prices. Valid usage settles token charges. Failed, interrupted or malformed receipts retain their maximum reservation. Budget state survives process restarts and disposable evaluation databases; there is no automatic replenishment. This is an application guard, rather than an account-wide provider billing control.
 
 ## Persistence and approval
 
